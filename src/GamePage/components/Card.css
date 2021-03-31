@@ -1,0 +1,9 @@
+.gameCard {
+    padding-top: 0.4rem;
+}
+
+.gameCard img {
+    border: 10px solid black;
+    width: calc(100% - 20px);
+    border-radius: 5px;
+}

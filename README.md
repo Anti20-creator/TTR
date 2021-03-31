@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+﻿# Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -68,3 +68,23 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Starting ideas
+
+### Cities
+
+  - Coords (x, y) as two numbers, representating the top and left percentage values on the map
+  - Name - string, name of the city
+
+### MapTrain
+
+  - Color
+  - PlacedHere - bool - we can determine if player has been placed here a train or not
+  - Player - null or a name of a player
+
+### MapTrainLine
+
+  - betweenCities : array with exactly two elements -> like [Berlin, Budapest]
+  - aignment : middle, left, right -> transforms: translate(-/+50% | 0%)
+  - curve: rotate per train until n/2
+  - trainCount : 1..n 
