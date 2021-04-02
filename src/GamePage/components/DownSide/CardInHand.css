@@ -1,0 +1,15 @@
+.cardInHand {
+    position: relative;
+}
+.cardInHand img {
+    transform: rotate(90deg) translateX(20%);
+}
+.cardInHand .cardCount {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    font-size: 4rem;
+    -webkit-text-stroke: 2px black; /* width and color */
+    transform: translateX(-50%);
+    color: white;
+}

@@ -1,15 +1,23 @@
 .upperSide {
     display: flex;
+    height: 80vh;
 }
 
 .upperSide .leftPanel {
-    flex: 0.2;
+    flex: 0.15;
 }
 
 .upperSide .map {
-    flex: 0.65;
+    position: relative;
+    height: 100%;
+    flex: 0.77; /*0.77*/
+    /*background-image: url('https://webassets.tomtom.com/otf/images/media/61CB3F5B-D362-4B60-86375C97BD0CF459');*/
+    background-size: contain;
+    background-repeat: no-repeat;
+    justify-content: center;
+    background-position: center;
 }
 
 .upperSide .rightPanel {
-    flex: 0.15;
+    flex: 0.08;
 }

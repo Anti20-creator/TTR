@@ -1,0 +1,23 @@
+.homePage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    height: 100vh;
+}
+
+.box {
+    height: 50%;
+    border: 1px solid black;
+    width: 50%;
+    margin: 1rem;
+    padding: 1rem;
+    align-self: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.box .MuiFormControl-root, .leftBox .MuiButtonBase-root {
+    margin: 0.4rem;
+}

@@ -1,5 +1,6 @@
 .deck {
     position: relative;
+    transition: 0.8s;
 }
 
 .deck .deckCount {
@@ -11,4 +12,20 @@
     padding: 0;
     font-size: 1.8rem;
     font-weight: bold;
+}
+
+.deck p{
+    cursor: pointer;
+}
+
+.deck:hover {
+    transform: translateX(-20px);
+    transition: 0.5s;
+    cursor: pointer;
+    color: red;
+}
+
+
+.deck .gameCard:hover{
+    transform: none;
 }

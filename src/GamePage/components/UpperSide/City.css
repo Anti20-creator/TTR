@@ -1,0 +1,16 @@
+.city .circle {
+    width: 10px;
+    height: 10px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background: cyan;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 0;
+}
+
+.mapCity--name {
+    font-size: 10px;
+    transform: translateY(-5px);
+}

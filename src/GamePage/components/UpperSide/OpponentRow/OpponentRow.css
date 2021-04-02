@@ -1,0 +1,34 @@
+.opponentRow {
+    width: 100%;
+    height: 14%;
+    display: flex;
+    color: white;
+}
+
+.opponentRow .avatarHolder {
+    text-align: center;
+    justify-content: center;
+    vertical-align: middle;
+    align-self: center;
+}
+.opponentRow .MuiAvatar-root {
+    height: 80%;
+    width: 40%;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto;
+}
+.opponentRow .opponentRow--bottom {
+    color: white;
+}
+.opponentRow > div {
+    height: 100%;
+}
+
+.opponentRow .playerInfos {
+    background-color: black;
+}
+
+.opponentRow .score {
+    font-size: 14px;
+}

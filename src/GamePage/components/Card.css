@@ -1,9 +1,16 @@
 .gameCard {
-    padding-top: 0.4rem;
+    margin-top: 0.1rem;
+    transition: 0.8s;
 }
 
 .gameCard img {
-    border: 10px solid black;
-    width: calc(100% - 20px);
+    border: 5px solid white;
+    width: calc(100% - 10px);
     border-radius: 5px;
+}
+
+.gameCard:hover {
+    cursor: pointer;
+    transform: translateX(-20px);
+    transition: 0.5s;
 }
