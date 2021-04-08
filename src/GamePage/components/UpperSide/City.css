@@ -1,16 +1,53 @@
+.city:hover {
+    cursor: pointer;
+}
+
 .city .circle {
     width: 10px;
     height: 10px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    border-radius: 25px;
-    background: cyan;
+    border-radius: 50%;
+    background: #05C3DD;
     transform: translate(-50%, -50%);
     margin: 0;
     padding: 0;
+    z-index: 99999;
+}
+.city.true .selected {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: green;
+    margin-left: -7.5px;
+    margin-top: -15px;
+    border-radius: 50%;
+    animation: cityCircleAnimation 1s ease-in-out infinite;
+    z-index: 100;
 }
 
+.city.selectedCity {
+    animation: cityCircleAnimation 1s ease-in-out infinite;
+}
+
+.city
 .mapCity--name {
-    font-size: 10px;
-    transform: translateY(-5px);
+    top: 0;
+    position: absolute;
+    font-size: 12px;
+    transform: translateY(-20px) translateX(-100%);
+}
+
+.down{
+    transform: translateY(23px);
+}
+
+@keyframes cityCircleAnimation{
+    0% {
+        transform: scale(1.0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1.0);
+    }
 }

@@ -3,12 +3,26 @@ import './Map.css'
 import { ticketToRideData } from '../../../mapdata/MapData.js'
 import City from './City.js'
 import TrainRoute from './TrainRoute'
+import LineTo, { Line } from 'react-lineto'
+import LineBetweenCities from './LineBetweenCities'
 
 function Map() {
+
+    const url = process.env.PUBLIC_URL + 'ticket-to-ride-euorpe-map.jpg'
+    console.log(url)
     return (
-        <div className="map">
+        <div className="map" style={{backgroundImage: url}}>
             {Object.keys(ticketToRideData.cities).map(city => {
-                return <City x={ticketToRideData.cities[city].x} y={ticketToRideData.cities[city].y} name={ticketToRideData.cities[city].city} />
+                return <City 
+                            x={ticketToRideData.cities[city].x} 
+                            y={ticketToRideData.cities[city].y} 
+                            name={ticketToRideData.cities[city].city}
+                            modifier={ticketToRideData.cities[city].modifier}
+                            className={ticketToRideData.cities[city].city} 
+                            goalCity={
+                                ticketToRideData.cities[city].city == 'Zurich'
+                                    ||  ticketToRideData.cities[city].city == 'Budapest'
+                            } />
                 //return (<div></div>)
             })}
             {Object.keys(ticketToRideData.connections).map(connection => {
@@ -36,6 +50,13 @@ function Map() {
                 return undefined
                 //console.log(connection)
                 //return (<div></div>)
+            })}
+
+            {/*<LineBetweenCities fromX={17} fromY={13.133208255159476} toX={18.375} toY={17.636022514071296} />*/}
+            {Object.keys(ticketToRideData.connections).map(connection => {
+                const from = ticketToRideData.connections[connection].fromCity
+                const to = ticketToRideData.connections[connection].toCity
+                return <LineBetweenCities fromCity={from} toCity={to} />
             })}
         </div>
     )

@@ -5,8 +5,12 @@ import './PlayerHand.css'
 function PlayerHand({ cards }) {
     return (
         <div className="playerHand">
-            {cards.map(card => {
-                return <CardInHand color={card.color} count={card.count} key={card.color + card.count} />
+            {cards.filter(card => card.count > 0).map((card, idx) => {
+                return <CardInHand 
+                            color={card.color} 
+                            count={card.count} 
+                            key={card.color + card.count}
+                            place={idx} />
             })}
         </div>
     )

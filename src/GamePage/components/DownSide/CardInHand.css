@@ -1,15 +1,23 @@
 .cardInHand {
     position: relative;
 }
-.cardInHand img {
-    transform: rotate(90deg) translateX(20%);
+.cardInHand {
+    transition: 0.8s all;
+    border: 2px solid white;
+}
+
+.cardInHand:hover {
+    transition: 0.5s;
+    cursor: pointer;
+    border: 2px solid red;
 }
 .cardInHand .cardCount {
+    font-weight: bold;
     position: absolute;
-    top: 20%;
+    top: 15%;
     left: 50%;
     font-size: 4rem;
-    -webkit-text-stroke: 2px black; /* width and color */
+    -webkit-text-stroke: 3px black; /* width and color */
     transform: translateX(-50%);
     color: white;
 }

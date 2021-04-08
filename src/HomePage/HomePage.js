@@ -3,24 +3,30 @@ import './HomePage.css'
 import TextField from '@material-ui/core/TextField'
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
+import { useHistory } from "react-router-dom";
 
 function HomePage() {
 
     const [playerName, setPlayerName] = useState("")
+    const [joinPlayerName, setJoinPlayerName] = useState("")
     const [playerCount, setPlayerCount] = useState(2)
     const [roomID, setRoomID] = useState("")
+
+    const history = useHistory()
 
     const createRoom = (e) => {
         e.preventDefault()
         if(playerName.trim() != "" && playerCount > 1 && playerCount < 6){
             localStorage.setItem('hostPlayerName', playerName)
             localStorage.setItem('roomCount', playerCount)
+            history.push('/room/123')
         }
     }
-
+    
     const joinRoom = (e) => {
-        if(roomID.trim() != ""){
+        if(joinPlayerName.trim() != "" && roomID.trim() != ""){
             localStorage.setItem('roomID', roomID)
+            history.push('/room/123')
         }
     }
 
@@ -58,6 +64,13 @@ function HomePage() {
             <div className="rightBox box">
                 <h1>Csatlakozás szobához</h1>
                 <form onSubmit={e=> joinRoom(e)}>
+                    <TextField
+                        label="Felhasználónév"
+                        defaultValue=""
+                        helperText=""
+                        onChange={e => setJoinPlayerName(e.target.value)} 
+                        style={{minWidth: 200}} />
+                    <br/>
                     <TextField
                         label="Szoba azonosítója"
                         defaultValue=""

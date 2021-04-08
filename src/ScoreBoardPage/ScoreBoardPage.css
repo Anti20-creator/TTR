@@ -1,0 +1,44 @@
+.scoreBoard {
+    background: url('https://i.pinimg.com/originals/d7/59/b5/d759b559ad669f9e199f1aaaa381a8ab.jpg');
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    vertical-align: middle;
+}
+
+.scoreBoard * {
+    color: white;
+    font-weight: bold;
+}
+
+.scoreBoard th, .scoreBoard td {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+.scoreBoard > div {
+    align-self: center;
+    width: 100%;
+}
+
+.scoreBoard h1 {
+    text-align: center;
+    padding-bottom: 0.7rem;
+    background: rgb(0, 0, 0, 0.4);
+    width: 20%;
+    font-size: 2rem !important;
+    line-height: 1.6;
+    padding-top: 0.5rem;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+}
+
+.scoreBoard table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    border-radius: 5px;
+    border-style: hidden;
+    overflow: hidden;
+}

@@ -2,3 +2,12 @@
     display: flex;
     margin-top: 1.4vh;
 }
+
+.downSide .goalCards {
+    flex: 0.2;
+}
+
+.downSide .playerHand {
+    justify-content: center;
+    flex: 0.8;
+}

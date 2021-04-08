@@ -24,7 +24,7 @@ export const ticketToRideData = {
       "22":{"id":"22","city":"Lisboa","today":"Lisbon","country":"Portugal","x":4.625,"y":86.49155722326454},
       "23":{"id":"23","city":"London","today":"London","country":"England, UK","x":22.75,"y":30.393996247654787},
       "24":{"id":"24","city":"Madrid","today":"Madrid","country":"Spain","x":10.875,"y":83.11444652908068},
-      "25":{"id":"25","city":"Marseille","today":"Marseille","country":"France","x":34.875,"y":70.73170731707317},
+      "25":{"id":"25","city":"Marseille","today":"Marseille","country":"France","x":34.875,"y":70.73170731707317, "modifier":'down'},
       "26":{"id":"26","city":"Moskva","today":"Moscow","country":"Russia","x":93,"y":26.454033771106943},
       "27":{"id":"27","city":"Munchen","today":"Munich","country":"Germany","x":43.625,"y":48.405253283302066},
       "28":{"id":"28","city":"Palermo","today":"Palermo","country":"Italy","x":49.625,"y":93.80863039399625},
@@ -214,7 +214,7 @@ export const ticketToRideData = {
           { "x": 34, "y": 34.146341463414636 },
           { "x": 36.5, "y": 37.89868667917448 }
         ],
-        "color": "whote",
+        "color": "white",
         "locomotive": 0
       },
       "14": {
@@ -314,7 +314,7 @@ export const ticketToRideData = {
           { "x": 15.375, "y": 76.73545966228893 },
           { "x": 13.125, "y": 80.86303939962477 }
         ],
-        "color": "whote",
+        "color": "white",
         "locomotive": 0
       },
       "21": {
@@ -467,7 +467,7 @@ export const ticketToRideData = {
           { "x": 33, "y": 46.34146341463415 },
           { "x": 35.875, "y": 43.52720450281426 }
         ],
-        "color": "whote",
+        "color": "white",
         "locomotive": 0
       },
       "32": {
@@ -671,7 +671,7 @@ export const ticketToRideData = {
           { "x": 51.125, "y": 11.632270168855536 },
           { "x": 54, "y": 8.442776735459661 }
         ],
-        "color": "whote",
+        "color": "white",
         "locomotive": 0
       },
       "47": {
@@ -711,7 +711,7 @@ export const ticketToRideData = {
           { "x": 49.125, "y": 73.73358348968105 },
           { "x": 52.37500000000001, "y": 75.79737335834896 }
         ],
-        "color": "whote",
+        "color": "white",
         "locomotive": 0
       },
       "50": {
@@ -736,9 +736,9 @@ export const ticketToRideData = {
         "to": "28",
         "toCity": "Palermo",
         "elements": [
-          { "x": 51.625, "y": 91.36960600375235 },
+          { "x": 54.75, "y": 82.36397748592871 },
           { "x": 54, "y": 87.4296435272045 },
-          { "x": 54.75, "y": 82.36397748592871 }
+          { "x": 51.625, "y": 91.36960600375235 }
         ],
         "color": "gray",
         "locomotive": 1
@@ -881,10 +881,10 @@ export const ticketToRideData = {
         "to": "44",
         "toCity": "Wien",
         "elements": [
-          { "x": 56.49999999999999, "y": 48.21763602251407 },
-          { "x": 59.25, "y": 45.0281425891182 },
+          { "x": 63.5, "y": 36.58536585365854 },
           { "x": 61.625, "y": 41.088180112570356 },
-          { "x": 63.5, "y": 36.58536585365854 }
+          { "x": 59.25, "y": 45.0281425891182 },
+          { "x": 56.49999999999999, "y": 48.21763602251407 }
         ],
         "color": "blue",
         "locomotive": 0
@@ -919,7 +919,7 @@ export const ticketToRideData = {
         "to": "10",
         "toCity": "Budapest",
         "elements": [{ "x": 56.25, "y": 54.03377110694184 }],
-        "color": "whote",
+        "color": "white",
         "locomotive": 0
       },
       "65": {
@@ -929,8 +929,8 @@ export const ticketToRideData = {
         "to": "10",
         "toCity": "Budapest",
         "elements": [
-          { "x": 57.49999999999999, "y": 57.223264540337716 },
-          { "x": 55.375, "y": 61.53846153846154 }
+          { "x": 55.375, "y": 61.53846153846154 },
+          { "x": 57.49999999999999, "y": 57.223264540337716 }
         ],
         "color": "orange",
         "locomotive": 0
@@ -1039,8 +1039,8 @@ export const ticketToRideData = {
         "to": "9",
         "toCity": "Bucuresti",
         "elements": [
-          { "x": 72.375, "y": 67.7298311444653 },
-          { "x": 70.125, "y": 71.48217636022514 }
+          { "x": 70.125, "y": 71.48217636022514 },
+          { "x": 72.375, "y": 67.7298311444653 }
         ],
         "color": "gray",
         "locomotive": 0
@@ -1098,10 +1098,10 @@ export const ticketToRideData = {
         "to": "21",
         "toCity": "Kyiv",
         "elements": [
-          { "x": 77, "y": 45.40337711069418 },
-          { "x": 75.875, "y": 50.28142589118198 },
+          { "x": 73.75, "y": 60.0375234521576 },
           { "x": 74.75, "y": 55.34709193245778 },
-          { "x": 73.75, "y": 60.0375234521576 }
+          { "x": 75.875, "y": 50.28142589118198 },
+          { "x": 77, "y": 45.40337711069418 }
         ],
         "color": "gray",
         "locomotive": 0
@@ -1128,8 +1128,8 @@ export const ticketToRideData = {
         "to": "45",
         "toCity": "Wilno",
         "elements": [
-          { "x": 77.5, "y": 31.894934333958723 },
-          { "x": 79, "y": 36.39774859287054 }
+          { "x": 79, "y": 36.39774859287054 },
+          { "x": 77.5, "y": 31.894934333958723 }
         ],
         "color": "gray",
         "locomotive": 0
@@ -1204,10 +1204,10 @@ export const ticketToRideData = {
         "to": "31",
         "toCity": "Petrograd",
         "elements": [
-          { "x": 82.625, "y": 13.133208255159476 },
-          { "x": 80.625, "y": 17.26078799249531 },
+          { "x": 76.5, "y": 25.70356472795497 },
           { "x": 78.625, "y": 21.388367729831145 },
-          { "x": 76.5, "y": 25.70356472795497 }
+          { "x": 80.625, "y": 17.26078799249531 },
+          { "x": 82.625, "y": 13.133208255159476 }
         ],
         "color": "blue",
         "locomotive": 0
@@ -1275,10 +1275,10 @@ export const ticketToRideData = {
         "to": "36",
         "toCity": "Sevastopol",
         "elements": [
-          { "x": 87.5, "y": 62.851782363977485 },
-          { "x": 88, "y": 57.5984990619137 },
+          { "x": 92.875, "y": 54.971857410881796 },
           { "x": 89.5, "y": 54.03377110694184 },
-          { "x": 92.875, "y": 54.971857410881796 }
+          { "x": 88, "y": 57.5984990619137 },
+          { "x": 87.5, "y": 62.851782363977485 }
         ],
         "color": "gray",
         "locomotive": 0
@@ -1295,7 +1295,7 @@ export const ticketToRideData = {
           { "x": 82.25, "y": 59.849906191369605 },
           { "x": 85.125, "y": 63.22701688555347 }
         ],
-        "color": "whote",
+        "color": "white",
         "locomotive": 0
       },
       "91": {
@@ -1331,10 +1331,10 @@ export const ticketToRideData = {
         "to": "12",
         "toCity": "Constantinople",
         "elements": [
-          { "x": 79.75, "y": 78.98686679174483 },
-          { "x": 82.125, "y": 77.11069418386491 },
+          { "x": 85.5, "y": 70.1688555347092 },
           { "x": 84.5, "y": 75.23452157598499 },
-          { "x": 85.5, "y": 70.1688555347092 }
+          { "x": 82.125, "y": 77.11069418386491 },
+          { "x": 79.75, "y": 78.98686679174483 }
         ],
         "color": "gray",
         "locomotive": 2
@@ -1375,9 +1375,9 @@ export const ticketToRideData = {
         "to": "2",
         "toCity": "Angora",
         "elements": [
-          { "x": 88, "y": 91.55722326454033 },
+          { "x": 93.75, "y": 90.0562851782364 },
           { "x": 91.5, "y": 92.3076923076923 },
-          { "x": 93.75, "y": 90.0562851782364 }
+          { "x": 88, "y": 91.55722326454033 }
         ],
         "color": "black",
         "locomotive": 0
@@ -1402,9 +1402,9 @@ export const ticketToRideData = {
         "to": "38",
         "toCity": "Smyrna",
         "elements": [
-          { "x": 76.875, "y": 93.80863039399625 },
+          { "x": 83.75, "y": 91.74484052532833 },
           { "x": 80.25, "y": 93.62101313320825 },
-          { "x": 83.75, "y": 91.74484052532833 }
+          { "x": 76.875, "y": 93.80863039399625 }
         ],
         "color": "orange",
         "locomotive": 0
@@ -1434,7 +1434,7 @@ export const ticketToRideData = {
           { "x": 91.625, "y": 17.636022514071296 },
           { "x": 92.625, "y": 23.076923076923077 }
         ],
-        "color": "whote",
+        "color": "white",
         "locomotive": 0
       },
       "101": {

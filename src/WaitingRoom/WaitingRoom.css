@@ -1,0 +1,49 @@
+.waitingRoom {
+    text-align: center;
+    background-color: papayawhip;
+    height: calc(100vh - 2rem);
+    border: 1rem solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.waitingRoom .exit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    z-index: 9999;
+}
+.waitingRoom .elements {
+    flex: 0.9;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    transform: translateY(-10%);
+}
+.waitingRoom .exit .MuiSvgIcon-root {
+    font-size: 3rem;
+    margin: 0.4rem;
+}
+
+.waitingRoom .playerName {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.waitingRoom .players {
+    display: flex;
+    justify-content: center;
+}
+.waitingRoom .player {
+    margin: 1rem;
+}
+.waitingRoom .player .MuiAvatar-root {
+    margin: 0 auto;
+    margin-bottom: 14px;
+}
+
+.waitingRoom .elements .MuiButtonBase-root {
+    width: 200px;
+    margin: 0 auto;
+}

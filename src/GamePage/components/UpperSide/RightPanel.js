@@ -10,7 +10,7 @@ function RightPanel() {
         <Card cardColor="White" />,
         <Card cardColor="Red" />,
         <Card cardColor="Yellow" />,
-        <Card cardColor="Purple" />,
+        <Card cardColor="Joker" />,
         <Card cardColor="Black" />
     ]
 

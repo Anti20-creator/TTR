@@ -6,14 +6,16 @@
 }
 
 .opponentRow .avatarHolder {
+    display: flex;
+    flex-direction: column;
     text-align: center;
     justify-content: center;
     vertical-align: middle;
     align-self: center;
 }
 .opponentRow .MuiAvatar-root {
-    height: 80%;
-    width: 40%;
+    height: 40%;
+    width: 50%;
     justify-content: center;
     text-align: center;
     margin: 0 auto;
@@ -24,11 +26,24 @@
 .opponentRow > div {
     height: 100%;
 }
-
 .opponentRow .playerInfos {
-    background-color: black;
+    display: flex;
 }
-
+.opponentRow .MuiSvgIcon-root {
+    color: white;
+}
+.MuiListItemIcon-root {
+    min-width: 40px;
+}
 .opponentRow .score {
     font-size: 14px;
+}
+
+@media(max-width: 1440px){
+    .opponentRow {
+        width: 100%;
+        height: 18%;
+        display: flex;
+        color: white;
+    }
 }

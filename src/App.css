@@ -3,5 +3,15 @@
   padding: 0;
 }
 body {
-  overflow: hidden;
+  /* overflow: hidden; */
+}
+
+.app{
+  /*background: url('https://wallpaperaccess.com/full/276598.jpg');*/
+  background-size: cover;
+  background-position: initial;
+}
+
+.app .gamepage {
+  background: url('https://cdn.wallpapersafari.com/90/7/KGe7I0.jpg');
 }

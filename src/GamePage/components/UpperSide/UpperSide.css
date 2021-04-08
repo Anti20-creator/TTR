@@ -12,7 +12,7 @@
     height: 100%;
     flex: 0.77; /*0.77*/
     /*background-image: url('https://webassets.tomtom.com/otf/images/media/61CB3F5B-D362-4B60-86375C97BD0CF459');*/
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     justify-content: center;
     background-position: center;
@@ -20,4 +20,23 @@
 
 .upperSide .rightPanel {
     flex: 0.08;
+}
+
+@media(max-width: 1440px){
+    .upperSide {
+        height: 72vh;
+    }
+    .upperSide .map {
+        flex: 0.77;
+    }
+    .upperSide {
+        justify-content: space-between;
+    }
+}
+
+.upperSide .leftPanel .MuiButtonBase-root{
+    margin: 0 auto;
+    display: block;
+    margin-top: 10px;
+    background: white !important;
 }
