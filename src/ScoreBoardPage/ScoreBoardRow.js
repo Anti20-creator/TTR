@@ -55,6 +55,7 @@ function ScoreBoardRow({idx, row, map}) {
                 <StyledTableCell component="th">{row.allDestinations}</StyledTableCell>
                 <StyledTableCell component="th">{row.completedDestinations}</StyledTableCell>
                 <StyledTableCell component="th">{row.longestTrain}</StyledTableCell>
+                <StyledTableCell component="th">{row.points}</StyledTableCell>
             </StyledTableRow> }
             {idx % 2 != 0 &&
             <TableRow>
@@ -67,6 +68,7 @@ function ScoreBoardRow({idx, row, map}) {
                 <StyledTableCell component="th">{row.allDestinations}</StyledTableCell>
                 <StyledTableCell component="th">{row.completedDestinations}</StyledTableCell>
                 <StyledTableCell component="th">{row.longestTrain}</StyledTableCell>
+                <StyledTableCell component="th">{row.points}</StyledTableCell>
             </TableRow> }
             <StyledTableRow>
                 <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

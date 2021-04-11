@@ -13,12 +13,13 @@ function ScoreBoardPage() {
 
     const map = <ScoreBoardMapDialog />
     
-    const createData = (playerName, allDestinations, completedDestinations, longestTrain) => {
+    const createData = (playerName, allDestinations, completedDestinations, longestTrain, points) => {
         return {
             playerName,
             allDestinations,
             completedDestinations,
             longestTrain,
+            points,
             destinationData: [
                 {'id': '2', 'from': 'Berlin', 'to': 'Wien', 'points': '15', 'completed': 'nem'},
                 {'id': '4', 'from': 'Edinburgh', 'to': 'London', 'points': '5', 'completed': 'igen'},
@@ -28,11 +29,11 @@ function ScoreBoardPage() {
     }
 
     const rows = [
-        createData('Player1', 3, 1, 15),
-        createData('Player2', 2, 2, 20),
-        createData('Player3', 3, 1, 11),
-        createData('Player4', 3, 1, 8),
-        createData('Player5', 2, 1, 3)
+        createData('Player1', 3, 1, 15, 30),
+        createData('Player2', 2, 2, 20, 26),
+        createData('Player3', 3, 1, 11, 20),
+        createData('Player4', 3, 1, 8, 12),
+        createData('Player5', 2, 1, 3, 8)
     ]
 
     const StyledTableCell = withStyles((theme) => ({
@@ -73,6 +74,7 @@ function ScoreBoardPage() {
                             <StyledTableCell><b>Útvonalak</b></StyledTableCell>
                             <StyledTableCell><b>Teljesített útvonalak</b></StyledTableCell>
                             <StyledTableCell><b>Leghosszabb út</b></StyledTableCell>
+                            <StyledTableCell><b>Pontok</b></StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

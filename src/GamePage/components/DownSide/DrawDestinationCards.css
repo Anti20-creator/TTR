@@ -1,0 +1,11 @@
+.drawDestinationCards {
+    display: flex;
+    width: 100%;
+    vertical-align: middle;
+    align-items: center;
+}
+
+.drawDestinationCards .MuiButtonBase-root{
+    height: 30%;
+    align-self: center;
+}

@@ -29,15 +29,27 @@
 }
 
 .city
-.mapCity--name {
+.mapCity--name{
     top: 0;
     position: absolute;
     font-size: 12px;
-    transform: translateY(-20px) translateX(-100%);
+    transform: translateY(-25px) translateX(-100%);
 }
 
-.down{
-    transform: translateY(23px);
+.middle-left{
+    transform: translateY(-5px) translateX(-130%) !important;
+}
+
+.down-right{
+    transform: translateY(10px) translateX(0%) !important;
+}
+
+.middle-right{
+    transform: translateY(-11px) translateX(20%) !important;
+}
+
+.close-top-left{
+    transform: translateY(-20px) translateX(-90%) !important;
 }
 
 @keyframes cityCircleAnimation{

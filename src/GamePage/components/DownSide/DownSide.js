@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './DownSide.css'
 import GoalCard from '../GoalCard'
 import CardInHand from './CardInHand'
 import PlayerHand from './PlayerHand'
+import DrawDestinationCards from './DrawDestinationCards'
 
 function DownSide() {
 
@@ -20,10 +21,14 @@ function DownSide() {
         {from: 'Barcelona', to: 'Berlin', points: '22', completed: true}
     ]
 
+    const [begin, setBegin] = useState(false)
+
     return (
         <div className="downSide">
-            <GoalCard data={goalCards} />
-            <PlayerHand cards={cardsInHand} />
+            {begin &&
+            <GoalCard data={goalCards} />}
+            {begin && <PlayerHand cards={cardsInHand} />}
+            {!begin && <DrawDestinationCards clickEvent={() => setBegin(true)} />}
         </div>
     )
 }

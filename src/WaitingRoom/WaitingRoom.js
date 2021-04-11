@@ -20,7 +20,7 @@ function WaitingRoom() {
     return (
         <div className="waitingRoom">
             <div className="exit">
-                <Tooltip title="Leave Room">
+                <Tooltip title="Kilépés">
                     <IconButton aria-label="leave-room" onClick={() => history.push('../..')}>
                         <ExitToAppIcon />
                     </IconButton>

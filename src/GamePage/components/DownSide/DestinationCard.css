@@ -1,0 +1,40 @@
+.destCard {
+    width: 20%;
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.destCard h6 {
+    line-height: 1;
+    text-align: center;
+}
+
+.destCard .circle {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 50%;
+    font-size: 17px;
+    color: #FFF;
+    font-weight: 700;
+    text-align: center;
+    background: #000;
+    margin-top: 12px;
+}
+
+.destCard .MuiCard-root.selected {
+    box-shadow: 2px 2px 2px 2px blue;
+}
+
+.destCard {
+    height: 95%;
+}
+
+.destCard .MuiCard-root {
+    height: 100%;
+}
+
+.destCard:hover{
+    cursor: pointer;
+}

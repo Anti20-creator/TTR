@@ -5,6 +5,7 @@ import RightPanel from './RightPanel'
 import './UpperSide.css'
 
 function UpperSide() {
+    
     return (
         <div className="upperSide">
             <LeftPanel />

@@ -1,4 +1,27 @@
-﻿# Getting Started with Create React App
+﻿# Feladat megvalósítása
+
+## Kezdőoldal
+
+A kezdőoldalon elhelyezésre kerültek a csatlakozás és a szoba létrehozásának elemei. Amennyiben a felhasználó üresen hagyja valamelyik mezőt, akkor azt alul hibaüzenetként jelzi az oldal a felhasználónak.
+A játékszabályzat gombra kattintva pedig egy új oldal nyílik fel, ahol elérhető az eredeti oldalról származó játékleírás.
+
+## Várakozó szoba
+
+Miután a felhasználó létrehozott vagy csatlakozott egy szobához, utána átkerül a várakozó szobába. Itt a már belépett játékosok alatt egy-egy pipa jelenik meg, míg az üres játékosok alatt egy-egy töltő karika jelenik meg.
+A tesztelés miatt egy játék indítása gomb is felkerült, hogy tovább tudjunk lépni a játék oldalra.
+
+## Játékoldal
+
+A játékoldal betöltésekor alul választani kell a célok közül, majd a kész gombra nyomva továbbléphetünk.
+A játékpanel bal felén láthatóak a játékosok adatai. Az ikonok balról jobbra haladva ezeket jelentik: körök száma, vasúti kocsik száma, kézben lévő lapok száma, célok száma. Az előzmények gombra kattintva ugrik fel az előzmények panel, melyet bárhova kattintva bezárhatunk. Jobb oldalon a kártyákra kattintva pedig húzást szimulálhatunk, melynek jelenleg nincs funkciója az animáción kívül. A kézben tartott kártyákat kattintásra kijelölhetjük, majd ugyanígy vissza is vonhatjuk azokat. A célok elemeit pedig a jobbra és balra mutató ikonok segítségével lapozhatjuk. A középen lévő dupla pipa színe pedig azt jelöli, hogy teljesült-e már a cél. (Zöld színű, ha teljesült.) A városokat kattintásra jelölhetjük ki. A zöld körökként villogó mezők pedig majd az aktuális célkártya két városát fogják szimbolizálni. A térképen látható piros vonalak a felépített útvonalakat szimbolizálják. Ezek színe természetesen olyan lesz, amilyen az azt lerakó játékos színe volt.
+
+## Eredmények oldal
+
+[http://localhost:3000/scoreboard](http://localhost:3000/scoreboard) oldalon érthető el.
+Fel vannak sorolva a játékosok az eredményeikkel együtt. A nyílra kattintva pedig lenyílnak a részletesebb információk. A 'MUTASD' gombra kattintva pedig felnyílik a térkép, ahol ki lesz jelölve a térképen a felnyitott két város.
+
+
+# Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -68,23 +91,3 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-# Starting ideas
-
-### Cities
-
-  - Coords (x, y) as two numbers, representating the top and left percentage values on the map
-  - Name - string, name of the city
-
-### MapTrain
-
-  - Color
-  - PlacedHere - bool - we can determine if player has been placed here a train or not
-  - Player - null or a name of a player
-
-### MapTrainLine
-
-  - betweenCities : array with exactly two elements -> like [Berlin, Budapest]
-  - aignment : middle, left, right -> transforms: translate(-/+50% | 0%)
-  - curve: rotate per train until n/2
-  - trainCount : 1..n 

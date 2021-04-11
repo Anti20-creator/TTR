@@ -28,7 +28,7 @@ function LineBetweenCities({fromX, fromY, toX, toY, fromCity, toCity}) {
     console.log(coordinates)
 
     return (
-        <div style={{zIndex: 0}}>
+        <div className="lineBetween" style={{zIndex: 0}}>
             {coordinates.map((elem, index, array) => {
                 if(index + 1 < array.length){
                     return <LineBetweenPoints 

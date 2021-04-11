@@ -1,6 +1,7 @@
 .downSide {
     display: flex;
     margin-top: 1.4vh;
+    height: 18.6vh;
 }
 
 .downSide .goalCards {
@@ -10,4 +11,12 @@
 .downSide .playerHand {
     justify-content: center;
     flex: 0.8;
+}
+
+@media (max-width: 1440px) {
+    .downSide {
+        margin-top: 2.3vh;
+        height: 25.7vh;
+        width: 100%;
+    }
 }

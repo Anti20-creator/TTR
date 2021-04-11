@@ -1,15 +1,46 @@
 .homePage {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+}
+
+.homePage .titleHolder {
+    text-align: center;
+}
+.homePage .titleHolder a {
+    text-decoration: none;
+    padding-top: 20px !important;
+}
+
+.homePage .logoHolder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3%;
+    padding: 10px 20px;
+}
+
+.homePage .logoHolder img {
+    width: 100%;
+}
+
+.homePage .boxHolder {
     display: flex;
     justify-content: center;
     align-items: center;
     align-self: center;
-    height: 100vh;
+    flex-direction: row;
+    height: 50%;
+    width: 100%;
 }
 
 .box {
-    height: 50%;
+    height: 80%;
     border: 1px solid black;
-    width: 50%;
+    width: 45%;
     margin: 1rem;
     padding: 1rem;
     align-self: center;

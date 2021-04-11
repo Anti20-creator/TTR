@@ -17,7 +17,7 @@ function Map() {
                             x={ticketToRideData.cities[city].x} 
                             y={ticketToRideData.cities[city].y} 
                             name={ticketToRideData.cities[city].city}
-                            modifier={ticketToRideData.cities[city].modifier}
+                            modifier={ticketToRideData.cities[city].alignment}
                             className={ticketToRideData.cities[city].city} 
                             goalCity={
                                 ticketToRideData.cities[city].city == 'Zurich'
@@ -53,11 +53,14 @@ function Map() {
             })}
 
             {/*<LineBetweenCities fromX={17} fromY={13.133208255159476} toX={18.375} toY={17.636022514071296} />*/}
-            {Object.keys(ticketToRideData.connections).map(connection => {
+            {/*Object.keys(ticketToRideData.connections).map(connection => {
                 const from = ticketToRideData.connections[connection].fromCity
                 const to = ticketToRideData.connections[connection].toCity
                 return <LineBetweenCities fromCity={from} toCity={to} />
-            })}
+            })*/}
+            <LineBetweenCities fromCity='Edinburgh' toCity='London' />
+            <LineBetweenCities fromCity='Zagrab' toCity='Budapest' />
+            <LineBetweenCities fromCity='Danzig' toCity='Riga' />
         </div>
     )
 }

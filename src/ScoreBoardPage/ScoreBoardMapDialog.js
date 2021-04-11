@@ -55,7 +55,7 @@ function ScoreBoardMapDialog() {
               Térkép
             </Typography>
             <Button autoFocus color="inherit" onClick={handleClose}>
-              save
+              Bezárás
             </Button>
           </Toolbar>
         </AppBar>

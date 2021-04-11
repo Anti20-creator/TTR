@@ -8,7 +8,7 @@ function City({x, y, name, modifier, goalCity}) {
     const makeSelected = (e) => {
         e.stopPropagation()
         setSelected(!selected)
-        if(!selected){
+        if(selected){
             e.target.parentNode.parentNode.classList.remove('selectedCity')
         }else{
             e.target.parentNode.parentNode.classList.add('selectedCity')

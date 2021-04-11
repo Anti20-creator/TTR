@@ -14,4 +14,11 @@ body {
 
 .app .gamepage {
   background: url('https://cdn.wallpapersafari.com/90/7/KGe7I0.jpg');
+  overflow: hidden;
+}
+
+.app .homePage {
+  background: url('https://cdn.hipwallpaper.com/i/53/19/8GYNRw.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
