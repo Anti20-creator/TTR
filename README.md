@@ -22,11 +22,11 @@ Fel vannak sorolva a játékosok az eredményeikkel együtt. A nyílra kattintva
 
 # Nyilatkozat
 
-Amtmann Kristóf
-VZTSXJ
-Kliensoldali webprogramozás - Ticket To Ride 1. felvonás
-2021.04.11
-Ezt a megoldást Amtmann Kristóf, VZTSXJ küldte be és készítette a Kliensoldali webprogramozás kurzus Ticket To Ride 1. felvonás feladatához.
+Amtmann Kristóf\
+VZTSXJ\
+Kliensoldali webprogramozás - Ticket To Ride 1. felvonás\
+2021.04.11\
+Ezt a megoldást Amtmann Kristóf, VZTSXJ küldte be és készítette a Kliensoldali webprogramozás kurzus Ticket To Ride 1. felvonás feladatához.\
 Kijelentem, hogy ez a megoldás a saját munkám.
 Nem másoltam vagy használtam harmadik féltől származó megoldásokat.
 Nem továbbítottam megoldást hallgatótársaimnak, és nem is tettem közzé.
@@ -36,7 +36,7 @@ az fegyelmi vétségnek számít. A fegyelmi vétség legsúlyosabb következmé
 
 # Telepítési útmutató
 
-git clone https://github.com/Anti20-creator/TTR
-cd into cloned folder
-npm install
-npm start
+git clone https://github.com/Anti20-creator/TTR \
+cd into cloned folder \
+npm install \
+npm start \
