@@ -21,22 +21,11 @@ function OpponentRow({ playerColor, playerName, playerScore, playerCards, player
         <div className="opponentRow" style={{backgroundColor: playerColor}}>
             <div className="avatarHolder" >
                 <Avatar src={`https://avatars.dicebear.com/4.5/api/human/${seed}.svg`} />
-                <h3>{playerScore}</h3>
+                <h6>{playerName}</h6>
+                <h6>{playerScore}</h6>
             </div>
             <div className="playerInfos">
             <List>
-                {/*<ListItem button>
-                    <ListItemIcon>
-                        <AdjustIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={rounds} />
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon>
-                        <ViewAgendaIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={playerCards} />
-                </ListItem>*/}
                 <ListItem>
                     <Badge badgeContent={rounds} color="primary">
                         <AdjustIcon />
@@ -49,18 +38,6 @@ function OpponentRow({ playerColor, playerName, playerScore, playerCards, player
                 </ListItem>
             </List>
             <List>
-                {/*<ListItem button>
-                    <ListItemIcon>
-                    <TrainIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={playerTrainCount} />
-                    </ListItem>
-                    <ListItem button>
-                    <ListItemIcon>
-                    <ExploreIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={playerGoals} />
-                </ListItem>*/}
                 <ListItem>
                     <Badge badgeContent={playerTrainCount} color="primary">
                         <TrainIcon />

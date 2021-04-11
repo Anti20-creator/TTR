@@ -23,40 +23,40 @@ function LeftPanel() {
                 playerName="Anti" 
                 playerCards="8+" 
                 playerGoals="2"
-                playerScore="52"
+                playerScore="36"
                 playerTrainCount="20" 
                 rounds="3" />
             <OpponentRow 
                 playerColor="purple" 
-                playerName="Anti" 
-                playerCards="8+" 
+                playerName="Player2" 
+                playerCards="1" 
                 playerGoals="2"
-                playerScore="52"
+                playerScore="18"
                 playerTrainCount="20" 
                 rounds="3" />
             <OpponentRow 
                 playerColor="green" 
-                playerName="Anti" 
-                playerCards="8+" 
+                playerName="Player3" 
+                playerCards="5" 
                 playerGoals="2"
                 playerScore="52"
-                playerTrainCount="20" 
+                playerTrainCount="7" 
                 rounds="3" />
             <OpponentRow 
                 playerColor="blue" 
-                playerName="Anti" 
+                playerName="Player4" 
                 playerCards="8+" 
                 playerGoals="2"
                 playerScore="52"
-                playerTrainCount="20" 
+                playerTrainCount="18" 
                 rounds="3" />
             <OpponentRow 
                 playerColor="orange" 
-                playerName="Anti" 
-                playerCards="8+" 
-                playerGoals="2"
-                playerScore="52"
-                playerTrainCount="20" 
+                playerName="Player5" 
+                playerCards="4" 
+                playerGoals="1"
+                playerScore="22"
+                playerTrainCount="12" 
                 rounds="3" />
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                 Előzmények
