@@ -17,7 +17,7 @@ A játékpanel bal felén láthatóak a játékosok adatai. Az ikonok balról jo
 
 ## Eredmények oldal
 
-[http://localhost:3000/scoreboard](http://localhost:3000/scoreboard) oldalon érthető el.
+[http://localhost:3000/scoreboard](http://localhost:3000/scoreboard) oldalon érthető el. \
 Fel vannak sorolva a játékosok az eredményeikkel együtt. A nyílra kattintva pedig lenyílnak a részletesebb információk. A 'MUTASD' gombra kattintva pedig felnyílik a térkép, ahol ki lesz jelölve a térképen a felnyitott két város.
 
 # Nyilatkozat
@@ -39,4 +39,4 @@ az fegyelmi vétségnek számít. A fegyelmi vétség legsúlyosabb következmé
 git clone https://github.com/Anti20-creator/TTR \
 cd into cloned folder \
 npm install \
-npm start \
+npm start
