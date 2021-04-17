@@ -7,14 +7,19 @@ import Button from '@material-ui/core/Button'
 import { useHistory } from "react-router-dom";
 import Tooltip from '@material-ui/core/Tooltip';
 import DoneIcon from '@material-ui/icons/Done';
+import { useDispatch } from 'react-redux'
+import { initPlayerHands, setPlayerCount } from '../features/dataSlice'
 
 function WaitingRoom() {
 
     const seed = Math.floor(Math.random() * 10000)
     const history = useHistory()
+    const dispatch = useDispatch()
 
     const startGame = () => {
         history.push('../../game/123')
+        //dispatch(setPlayerCount(2))
+       // dispatch(initPlayerHands())
     }
     
     return (

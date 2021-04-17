@@ -1,15 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Map.css'
 import { ticketToRideData } from '../../../mapdata/MapData.js'
 import City from './City.js'
 import TrainRoute from './TrainRoute'
 import LineTo, { Line } from 'react-lineto'
 import LineBetweenCities from './LineBetweenCities'
+import store from '../../../app/store'
+import { useDispatch } from 'react-redux'
+import { initPlayerHands, setPlayerCount } from '../../../features/dataSlice'
 
 function Map() {
 
+    const dispatch = useDispatch()
     const url = process.env.PUBLIC_URL + 'ticket-to-ride-euorpe-map.jpg'
     console.log(url)
+
+    //only for testing
+    useEffect(() => {
+        dispatch(setPlayerCount(2))
+        dispatch(initPlayerHands())
+    })
+
     return (
         <div className="map" style={{backgroundImage: url}}>
             {Object.keys(ticketToRideData.cities).map(city => {
