@@ -7,11 +7,9 @@ import Card from './Card'
 function Drawer() {
 
     const [cards, setCards] = useState([])
-
     const data = useSelector(onBoardCards)
 
     useEffect(() => {
-            console.log(store.getState().data.onBoardCards)
             console.log(data)
             setCards(data)            
     }, [data])

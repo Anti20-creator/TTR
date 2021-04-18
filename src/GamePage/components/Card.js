@@ -23,7 +23,10 @@ function Card({cardColor, idx}) {
     const goOut = (e) => {
         e.target.style.animation = 'cardOutAnimation 1s'
         setTimeout(() => {
-            dispatch(drawCardToBoard(idx))
+            dispatch(drawCardToBoard({
+                idx: idx,
+                color: color
+            }))
             setTimeout(() => {
                 e.target.style.animation = ''
             }, 300)

@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
+import { useDispatch } from 'react-redux';
+import { stepSelectedGoalIndex } from '../../features/dataSlice'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -48,6 +50,12 @@ function GoalCard({data}) {
     const classes = useStyles();
     const theme = useTheme();
     const [actual, setActual] = useState(0);
+    const dispatch = useDispatch()
+
+    function stepCities(x) {
+      setActual(mod(actual + x, data.length))
+      dispatch(stepSelectedGoalIndex(x))
+    }
 
     return (
         <div className="goalCards">
@@ -55,24 +63,24 @@ function GoalCard({data}) {
                 <div className={classes.details}>
                     <CardContent className={classes.content}>
                     <Typography component="h6" variant="h6">
-                        {data[actual].from}
+                        {data[actual].fromCity}
 
                         -
 
-                        {data[actual].to}
+                        {data[actual].toCity}
                     </Typography>
                     <Typography variant="subtitle1" color="textSecondary">
-                        <p className="circle">{data[actual].points}</p>
+                        <p className="circle">{data[actual].value}</p>
                     </Typography>
                     </CardContent>
                     <div className={classes.controls}>
-                    <IconButton aria-label="previous" onClick={() => setActual(mod(actual-1, data.length))}>
+                    <IconButton aria-label="previous" onClick={() => stepCities(-1)}>
                         {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
                     </IconButton>
                     <IconButton>
                         <DoneAllIcon style={{color : data[actual].completed ? 'green' : 'black'}} />
                     </IconButton>
-                    <IconButton aria-label="next" onClick={() => setActual(mod(actual+1, data.length))}>
+                    <IconButton aria-label="next" onClick={() => stepCities(1)}>
                         {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
                     </IconButton>
                     </div>

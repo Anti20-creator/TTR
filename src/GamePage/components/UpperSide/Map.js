@@ -5,12 +5,22 @@ import City from './City.js'
 import TrainRoute from './TrainRoute'
 import LineTo, { Line } from 'react-lineto'
 import LineBetweenCities from './LineBetweenCities'
-import { useDispatch } from 'react-redux'
-import { initPlayerHands, setPlayerCount, initOnBoardCars } from '../../../features/dataSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { 
+    initPlayerHands, 
+    setPlayerCount, 
+    initOnBoardCars, 
+    drawLongDestinations,
+    drawGoalOptionsForAllPlayers,
+    actualGoalIndex,
+    actualPlayerGoals
+ } from '../../../features/dataSlice'
 
 function Map() {
 
     const dispatch = useDispatch()
+    const index = useSelector(actualGoalIndex)
+    const goals = useSelector(actualPlayerGoals)
     const url = process.env.PUBLIC_URL + 'ticket-to-ride-euorpe-map.jpg'
     console.log(url)
 
@@ -19,7 +29,21 @@ function Map() {
         dispatch(setPlayerCount(2))
         dispatch(initPlayerHands())
         dispatch(initOnBoardCars())
-    })
+        dispatch(drawLongDestinations())
+        dispatch(drawGoalOptionsForAllPlayers())
+    }, [])
+
+    let cities
+
+    useEffect(() => {
+        if(goals && goals.length > 0){
+            cities = {
+                'fromCity': goals[index].fromCity,
+                'toCity': goals[index].toCity
+            }
+            console.log(cities)
+        }
+    }, [goals, index])
 
     return (
         <div className="map" style={{backgroundImage: url}}>
@@ -29,10 +53,11 @@ function Map() {
                             y={ticketToRideData.cities[city].y} 
                             name={ticketToRideData.cities[city].city}
                             modifier={ticketToRideData.cities[city].alignment}
-                            className={ticketToRideData.cities[city].city} 
+                            className={ticketToRideData.cities[city].city}
+                            key={ticketToRideData.cities[city].id} 
                             goalCity={
-                                ticketToRideData.cities[city].city == 'Zurich'
-                                    ||  ticketToRideData.cities[city].city == 'Budapest'
+                                ticketToRideData.cities[city].city == goals?.fromCity
+                                    || ticketToRideData.cities[city].city == goals?.toCity
                             } />
                 //return (<div></div>)
             })}

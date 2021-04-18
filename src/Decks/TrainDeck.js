@@ -13,7 +13,6 @@ export default class TrainDeck {
         })
         
         this.shuffle(10)
-
     }
 
     shuffle(times) {
@@ -29,3 +28,5 @@ export default class TrainDeck {
         return this.cards.shift()
     }
 }
+
+
