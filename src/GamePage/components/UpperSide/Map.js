@@ -5,9 +5,8 @@ import City from './City.js'
 import TrainRoute from './TrainRoute'
 import LineTo, { Line } from 'react-lineto'
 import LineBetweenCities from './LineBetweenCities'
-import store from '../../../app/store'
 import { useDispatch } from 'react-redux'
-import { initPlayerHands, setPlayerCount } from '../../../features/dataSlice'
+import { initPlayerHands, setPlayerCount, initOnBoardCars } from '../../../features/dataSlice'
 
 function Map() {
 
@@ -19,6 +18,7 @@ function Map() {
     useEffect(() => {
         dispatch(setPlayerCount(2))
         dispatch(initPlayerHands())
+        dispatch(initOnBoardCars())
     })
 
     return (
@@ -68,10 +68,10 @@ function Map() {
                 const from = ticketToRideData.connections[connection].fromCity
                 const to = ticketToRideData.connections[connection].toCity
                 return <LineBetweenCities fromCity={from} toCity={to} />
-            })*/}
+            })
             <LineBetweenCities fromCity='Edinburgh' toCity='London' />
             <LineBetweenCities fromCity='Zagrab' toCity='Budapest' />
-            <LineBetweenCities fromCity='Danzig' toCity='Riga' />
+            <LineBetweenCities fromCity='Danzig' toCity='Riga' />*/}
         </div>
     )
 }
