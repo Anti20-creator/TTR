@@ -13,14 +13,23 @@ import {
     drawLongDestinations,
     drawGoalOptionsForAllPlayers,
     actualGoalIndex,
-    actualPlayerGoals
+    actualPlayerGoals,
+    buyingOpts,
+    openBuying,
+    build,
+    playerLines
  } from '../../../features/dataSlice'
+import { Button, Dialog, DialogTitle } from '@material-ui/core'
+import PlayerHand from '../DownSide/PlayerHand'
 
 function Map() {
 
     const dispatch = useDispatch()
     const index = useSelector(actualGoalIndex)
     const goals = useSelector(actualPlayerGoals)
+    const buyingOptions = useSelector(buyingOpts)
+    const openBuyingPanel = useSelector(openBuying)
+    const lines = useSelector(playerLines)
     const url = process.env.PUBLIC_URL + 'ticket-to-ride-euorpe-map.jpg'
     console.log(url)
 
@@ -44,6 +53,14 @@ function Map() {
             console.log(cities)
         }
     }, [goals, index])
+
+    useEffect(() => {
+
+    }, [openBuyingPanel])
+
+    function closeBuyingPanel() {
+        dispatch(build())
+    }
 
     return (
         <div className="map" style={{backgroundImage: url}}>
@@ -95,8 +112,30 @@ function Map() {
                 return <LineBetweenCities fromCity={from} toCity={to} />
             })
             <LineBetweenCities fromCity='Edinburgh' toCity='London' />
-            <LineBetweenCities fromCity='Zagrab' toCity='Budapest' />
             <LineBetweenCities fromCity='Danzig' toCity='Riga' />*/}
+            {lines.map(player => player.map(line => {return (<LineBetweenCities
+                                        fromCity={line.fromCity}
+                                        toCity={line.toCity} 
+                                        color={line.color}
+                                        key={line.fromCity}
+                                        />)} 
+                                        )
+            )}
+            
+            {console.log('LINES: ', lines)}
+
+            <Dialog style={{overflow: 'scroll'}} open={openBuyingPanel} onClose={closeBuyingPanel} >
+                <DialogTitle id="simple-dialog-title">Építési opciók</DialogTitle>
+                {buyingOptions.options && buyingOptions.options.map((option, i) => {
+                    return (
+                        <div style={{display: 'flex'}}>
+                            <PlayerHand cards={option} />
+                            <Button onClick={() => dispatch(build(i))}>ÉPÍT</Button>
+                        </div>
+                    )
+                })}
+                {/*buyingOptions?.options[0].color*/}
+            </Dialog>
         </div>
     )
 }

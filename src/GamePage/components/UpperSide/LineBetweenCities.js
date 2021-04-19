@@ -2,7 +2,7 @@ import React from 'react'
 import { ticketToRideData } from '../../../mapdata/MapData'
 import LineBetweenPoints from './LineBetweenPoints'
 
-function LineBetweenCities({fromX, fromY, toX, toY, fromCity, toCity}) {
+function LineBetweenCities({fromX, fromY, toX, toY, fromCity, toCity, color}) {
 
     let coordinates = []
     const start = Object.keys(ticketToRideData.cities).find(x => {
@@ -11,8 +11,10 @@ function LineBetweenCities({fromX, fromY, toX, toY, fromCity, toCity}) {
     coordinates.push({'x': ticketToRideData.cities[start].x, 'y': ticketToRideData.cities[start].y})
     
     const between = Object.keys(ticketToRideData.connections).find(x => {
-        return ticketToRideData.connections[x].fromCity == fromCity
-        && ticketToRideData.connections[x].toCity == toCity
+        return (ticketToRideData.connections[x].fromCity == fromCity
+        && ticketToRideData.connections[x].toCity == toCity) || 
+        (ticketToRideData.connections[x].fromCity == toCity
+            && ticketToRideData.connections[x].toCity == fromCity)
     })
     console.log(between)
     console.log(ticketToRideData.connections[between])
@@ -35,7 +37,8 @@ function LineBetweenCities({fromX, fromY, toX, toY, fromCity, toCity}) {
                                 fromX={elem.x} 
                                 fromY={elem.y} 
                                 toX={array[index+1].x} 
-                                toY={array[index+1].y} />
+                                toY={array[index+1].y}
+                                color={color} />
                 }
             })}
         </div>

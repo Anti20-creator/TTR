@@ -28,6 +28,18 @@
     animation: cityCircleAnimation 1s ease-in-out infinite;
 }
 
+.city.neighbour .selected{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: brown;
+    margin-left: -7.5px;
+    margin-top: -15px;
+    border-radius: 50%;
+    animation: cityCircleAnimation 1s ease-in-out infinite;
+    z-index: 100;
+}
+
 .city
 .mapCity--name{
     top: 0;

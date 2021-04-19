@@ -1,33 +1,46 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import './City.css'
 import { 
     actualGoalIndex,
     actualPlayerGoals,
-    hoveredData
+    hoveredData,
+    selectedFirstCity,
+    selectFirstCity,
+    neighbourCitiesData,
+    gameState,
+    selectSecondCity
  } from '../../../features/dataSlice'
 
 function City({x, y, name, modifier}) {
 
     const [selected, setSelected] = useState(false)
+    const [isNeighbour, setIsNeighbour] = useState(false)
     const [active, setActive] = useState(false)
     const index = useSelector(actualGoalIndex)
     const goals = useSelector(actualPlayerGoals)
     const hoveredCities = useSelector(hoveredData)
+    const dispatch = useDispatch()
+    const selectedF = useSelector(selectedFirstCity)
+    const neighbours = useSelector(neighbourCitiesData)
+    const gameS = useSelector(gameState)
 
     const makeSelected = (e) => {
         e.stopPropagation()
-        setSelected(!selected)
-        if(selected){
-            e.target.parentNode.parentNode.classList.remove('selectedCity')
+        if(neighbours.includes(name)){
+            dispatch(selectSecondCity(name))
         }else{
-            e.target.parentNode.parentNode.classList.add('selectedCity')
+            dispatch(selectFirstCity(name))
         }
-        console.log(e.target.classList)
+        if(selectedF != name){
+            setSelected(false)
+        }else{
+            setSelected(true)
+        }
     }
     
     useEffect(() => {
-        if(goals && goals.length > 0){
+        if(gameS == 'IN_GAME' && goals && goals.length > 0){
             if(goals[index].toCity == name || goals[index].fromCity == name){
                 console.log(name)
                 setActive(true)
@@ -35,8 +48,8 @@ function City({x, y, name, modifier}) {
                 setActive(false)
             }
         }
-    }, [goals, index])
-
+    }, [goals, index, gameS])
+    
     useEffect(() => {
         if(hoveredCities.fromCity == name || hoveredCities.toCity == name){
             console.log(hoveredCities)
@@ -46,10 +59,26 @@ function City({x, y, name, modifier}) {
         }
     }, [hoveredCities])
 
+    useEffect(() => {
+        if(selectedF != name){
+            setSelected(false)
+        }else{
+            setSelected(true)
+        }
+    }, [selectedF])
+    
+    useEffect(() => {
+        if(!neighbours.includes(name)){
+            setIsNeighbour(false)
+        }else{
+            setIsNeighbour(true)
+        }
+    }, [neighbours])
+    
     return (
         <div 
-            className={'city ' + name + ' ' + active } 
-            style={{position: 'absolute', top: y+'%', left: x+'%', zIndex:99999}}
+        className={'city ' + name + ' ' + active + (selected ? ' selectedCity' : '') + (isNeighbour ? ' neighbour' : '') } 
+        style={{position: 'absolute', top: y+'%', left: x+'%', zIndex:99999}}
             onClick={(e) => makeSelected(e)} >
             <p className={"mapCity--name " + modifier} onClick={(e) => makeSelected(e)} ><b>{name}</b></p>
             <div className="circle"></div>

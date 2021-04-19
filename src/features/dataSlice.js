@@ -24,7 +24,13 @@ export const dataSlice = createSlice({
     hoveredData: {
         'fromCity': '',
         'toCity': ''
-    }
+    },
+    selectedFirstCity: '',
+    neighbourCities: [],
+    buyingArrays: [],
+    openBuyingOptions: false,
+    buyingOpts: [],
+    playerLines: []
   },
   reducers: {
     setPlayerCount: (state, action) => {
@@ -37,6 +43,7 @@ export const dataSlice = createSlice({
 
         Array.from(Array(state.playerCount).keys()).map(i => {
             state.playerHands.push([])
+            state.playerLines.push([])
             
             //adding all colors as an object with the count of 0
             Array.from(Array(state.colors.length).keys()).map(j => {
@@ -138,9 +145,82 @@ export const dataSlice = createSlice({
         state.hoveredData.fromCity = action.payload.from
         state.hoveredData.toCity = action.payload.to
     },
+    selectFirstCity: (state, action) => {
+        state.selectedFirstCity = state.selectedFirstCity == action.payload ? '' : action.payload
+        state.neighbourCities = []
+        state.buyingArrays = []
+        if(selectFirstCity == '') return
+        let newItems = []
+        for(let i = 1; i <= Object.keys(ticketToRideData.connections).length; ++i){
+            const item = ticketToRideData.connections[i]
+            
+            if(item?.fromCity == state.selectedFirstCity 
+                && canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length)){
+                newItems.push(item.toCity)
+                console.log(item.toCity)
+                state.buyingArrays.push({
+                    city: item.toCity,
+                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length)
+                })
+            }
+            if(item?.toCity == state.selectedFirstCity
+                && canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length)){
+                newItems.push(item.fromCity)
+                console.log(item.fromCity)
+                state.buyingArrays.push({
+                    city: item.fromCity,
+                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length)
+                })
+            }
+        }
+        state.neighbourCities = state.neighbourCities.concat([...new Set(newItems)])
+    },
+    selectSecondCity: (state, action) => {
+        if(state.selectedFirstCity == '') return
+        state.buyingOpts = state.buyingArrays.find(arr => arr.city == action.payload)
+        state.openBuyingOptions = true
+    },
+    build: (state, action) => {
+        state.openBuyingOptions = false
+        if(action.payload == undefined) return
+        const boughtWith = state.buyingOpts.options[action.payload]
+        console.log(boughtWith)
+        state.playerHands[state.currentPlayer].filter(x => x.color == boughtWith[0].color.capitalize())[0].count -= boughtWith[0].count
+        state.playerHands[state.currentPlayer].filter(x => x.color == boughtWith[1].color.capitalize())[0].count -= boughtWith[1].count
+        for(let i = 1; i <= Object.keys(ticketToRideData.connections).length; ++i){
+            if(ticketToRideData.connections[i].fromCity == state.selectedFirstCity
+                && ticketToRideData.connections[i].toCity == state.buyingOpts.city){
+                    state.playerLines[state.currentPlayer].push({
+                        fromCity: state.selectedFirstCity,
+                        toCity: state.buyingOpts.city,
+                        color: colors[state.currentPlayer]
+                    })
+                    break
+            }else if(ticketToRideData.connections[i].toCity == state.selectedFirstCity
+                && ticketToRideData.connections[i].fromCity == state.buyingOpts.city){
+                    state.playerLines[state.currentPlayer].push({
+                        toCity: state.selectedFirstCity,
+                        fromCity: state.buyingOpts.city,
+                        color: colors[state.currentPlayer]
+                    })
+                    break
+            }
+        }
+        state.playerLines[state.currentPlayer].push({
+            fromCity: state.selectedFirstCity,
+            toCity: state.buyingOpts.city,
+            color: colors[state.currentPlayer]
+        })
+    },
     nextPlayer: (state) => {
         state.currentPlayer++
         state.currentPlayer %= state.playerCount
+        state.hoveredData = {
+            'fromCity': '',
+            'toCity': ''
+        }
+        state.selectedGoalIndex = 0
+        state.selectedFirstCity = ''
     }
   }
 });
@@ -158,6 +238,44 @@ function mod(n, m) {
     return ((n % m) + m) % m
 }
 
+function canPayForIt(cardsInHand, color, length){
+    
+    let result = []
+
+    if(color != 'gray'){
+        console.log(color)
+        const matchingCards = cardsInHand.filter(x => x.color == color.capitalize()).length > 0  ? cardsInHand.filter(x => x.color == color.capitalize())[0].count : 0
+        const jokerCards = cardsInHand.filter(x => x.color == 'Joker').length > 0  ? cardsInHand.filter(x => x.color == 'Joker')[0].count : 0
+        console.log(matchingCards + jokerCards)
+        if((matchingCards + jokerCards) >= length){
+                console.log('IGAZ')
+                for(let i = 0; i <= length; ++i){
+                    if(matchingCards >= length - i && jokerCards >= i){
+                        let array = []
+                        array.push({
+                            'color': color,
+                            'count': length - i
+                        })
+                        array.push({
+                            'color': 'Joker',
+                            'count': i
+                        })
+                        result.push(array)
+                    }
+                }
+                return result
+        }else{
+            return false
+        }
+    }else{
+
+    }
+}
+
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 export const { 
     setPlayerCount, 
     initPlayerHands, 
@@ -167,7 +285,10 @@ export const {
     drawGoalOptionsForAllPlayers,
     acceptDestinations,
     stepSelectedGoalIndex,
-    setHoveredData
+    setHoveredData,
+    selectFirstCity,
+    selectSecondCity,
+    build
  } = dataSlice.actions
 
 export const onBoardCards = state => state.data.onBoardCards
@@ -179,6 +300,11 @@ export const actualPlayerHand = state => state.data.playerHands[state.data.curre
 export const actualPlayerGoals = state => state.data.playerGoals[state.data.currentPlayer]
 export const actualGoalIndex = state => state.data.selectedGoalIndex
 export const hoveredData = state => state.data.hoveredData
+export const selectedFirstCity = state => state.data.selectedFirstCity
+export const neighbourCitiesData = state => state.data.neighbourCities
+export const buyingOpts = state => state.data.buyingOpts
+export const openBuying = state => state.data.openBuyingOptions
+export const playerLines = state => state.data.playerLines
 //export const actualPlayer = state => state.data
 
 // export const selectOpenMail = state => state.mail.selectedMail
