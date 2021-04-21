@@ -9,7 +9,8 @@ import {
     selectFirstCity,
     neighbourCitiesData,
     gameState,
-    selectSecondCity
+    selectSecondCity,
+    isHovering
  } from '../../../features/dataSlice'
 
 function City({x, y, name, modifier}) {
@@ -24,6 +25,7 @@ function City({x, y, name, modifier}) {
     const selectedF = useSelector(selectedFirstCity)
     const neighbours = useSelector(neighbourCitiesData)
     const gameS = useSelector(gameState)
+    const currentlyHovered = useSelector(isHovering)
 
     const makeSelected = (e) => {
         e.stopPropagation()
@@ -40,15 +42,17 @@ function City({x, y, name, modifier}) {
     }
     
     useEffect(() => {
-        if(gameS == 'IN_GAME' && goals && goals.length > 0){
+        if(gameS == 'IN_GAME' && goals && goals.length > 0 && currentlyHovered){
             if(goals[index].toCity == name || goals[index].fromCity == name){
                 console.log(name)
                 setActive(true)
             }else{
                 setActive(false)
             }
+        }else{
+            setActive(false)
         }
-    }, [goals, index, gameS])
+    }, [currentlyHovered, goals, index, gameS])
     
     useEffect(() => {
         if(hoveredCities.fromCity == name || hoveredCities.toCity == name){

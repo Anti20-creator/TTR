@@ -20,11 +20,11 @@ function DrawDestinationCards({clickEvent}) {
         const oldCards = cards
         let newData = oldCards
         if(cards.includes(card)){
+            setCards(cards.filter(item => item != card))
              newData = oldCards.filter(item => item != card)            
         }else{
-            newData.push(card)
+            setCards([...oldCards, card])
         }
-        setCards(newData)
     }
 
     function acceptCards() {
@@ -48,7 +48,7 @@ function DrawDestinationCards({clickEvent}) {
                             key={i.id} />
                 
             })}
-            <Button variant="contained" color="primary" onClick={acceptCards} >
+            <Button disabled={cards.length == 0} variant="contained" color="primary" onClick={acceptCards} >
                 Kész
             </Button>
         </div>

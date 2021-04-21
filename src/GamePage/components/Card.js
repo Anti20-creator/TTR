@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import './Card.css'
 import store from '../../app/store'
-import { drawCardToBoard, initOnBoardCars, onBoardCards } from '../../features/dataSlice'
+import { drawCardToBoard, initOnBoardCars, onBoardCards, drawDestinationsInGame } from '../../features/dataSlice'
 
-function Card({cardColor, idx}) {
+function Card({cardColor, idx, goalDeckCover = false}) {
 
     //{cardColor} benne lesz, de a húzás animáció miatt így jobban átjön
 
@@ -21,16 +21,20 @@ function Card({cardColor, idx}) {
     }, [data])
 
     const goOut = (e) => {
-        e.target.style.animation = 'cardOutAnimation 1s'
-        setTimeout(() => {
-            dispatch(drawCardToBoard({
-                idx: idx,
-                color: color
-            }))
+        if(!goalDeckCover){
+            e.target.style.animation = 'cardOutAnimation 1s'
             setTimeout(() => {
-                e.target.style.animation = ''
-            }, 300)
-        }, 700)
+                dispatch(drawCardToBoard({
+                    idx: idx,
+                    color: color
+                }))
+                setTimeout(() => {
+                    e.target.style.animation = ''
+                }, 300)
+            }, 700)
+        }else{
+            dispatch(drawDestinationsInGame())
+        }
     }
 
     return (

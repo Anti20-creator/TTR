@@ -13,14 +13,12 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import Badge from '@material-ui/core/Badge';
 
 
-function OpponentRow({ playerColor, playerName, playerScore, playerCards, playerGoals, playerTrainCount, rounds }) {
-
-    const seed = Math.floor(Math.random() * 10000)
+function OpponentRow({ playerColor, playerName, playerScore, playerCards, playerGoals, playerTrainCount, rounds, seed, isActive=false }) {
 
     return (
         <div className="opponentRow" style={{backgroundColor: playerColor}}>
             <div className="avatarHolder" >
-                <Avatar src={`https://avatars.dicebear.com/4.5/api/human/${seed}.svg`} />
+                <Avatar style={{border: isActive ? '3px solid black' : ''}} src={`https://avatars.dicebear.com/4.5/api/human/${seed}.svg`} />
                 <h6>{playerName}</h6>
                 <h6>{playerScore}</h6>
             </div>

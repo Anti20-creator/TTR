@@ -89,7 +89,7 @@ function Map() {
                 const n1 = Math.sqrt(fromX*fromX+fromY*fromY)
                 const n2 = Math.sqrt(toX*toX+toY*toY)
                 const rotate = Math.acos((fromX*toX + fromY*toY)/(n1*n2)) * 180 / Math.PI
-                return Object.keys(ticketToRideData.connections[connection].elements).map(element => {
+                return (Object.keys(ticketToRideData.connections[connection].elements).map(element => {
                     const actual = ticketToRideData.connections[connection].elements[element]
                     //console.log(actual.color)
                     return <TrainRoute 
@@ -99,20 +99,12 @@ function Map() {
                                 key={actual.id}
                                 rotate={rotate}
                                 playerHolding={"red"} />
-                })
+                }))
                 return undefined
                 //console.log(connection)
                 //return (<div></div>)
             })}
 
-            {/*<LineBetweenCities fromX={17} fromY={13.133208255159476} toX={18.375} toY={17.636022514071296} />*/}
-            {/*Object.keys(ticketToRideData.connections).map(connection => {
-                const from = ticketToRideData.connections[connection].fromCity
-                const to = ticketToRideData.connections[connection].toCity
-                return <LineBetweenCities fromCity={from} toCity={to} />
-            })
-            <LineBetweenCities fromCity='Edinburgh' toCity='London' />
-            <LineBetweenCities fromCity='Danzig' toCity='Riga' />*/}
             {lines.map(player => player.map(line => {return (<LineBetweenCities
                                         fromCity={line.fromCity}
                                         toCity={line.toCity} 
@@ -121,6 +113,7 @@ function Map() {
                                         />)} 
                                         )
             )}
+
             
             {console.log('LINES: ', lines)}
 
@@ -128,7 +121,7 @@ function Map() {
                 <DialogTitle id="simple-dialog-title">Építési opciók</DialogTitle>
                 {buyingOptions.options && buyingOptions.options.map((option, i) => {
                     return (
-                        <div style={{display: 'flex'}}>
+                        <div key={i} style={{display: 'flex'}}>
                             <PlayerHand cards={option} />
                             <Button onClick={() => dispatch(build(i))}>ÉPÍT</Button>
                         </div>

@@ -17,7 +17,7 @@ function Drawer() {
     return (
         <div>
             {data.map((color, i) => {
-                return <Card cardColor={color} idx={i} />
+                return <Card cardColor={color} idx={i} key={i} />
             })}
             {/*data.map(color => {
                 return <p>{color}</p>

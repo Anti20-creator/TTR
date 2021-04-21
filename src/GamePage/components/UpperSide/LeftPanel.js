@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import GameHistory from './GameHistory'
 import OpponentRow from './OpponentRow/OpponentRow'
 import './LeftPanel.css'
+import { allGoals, allPlayerHand, currentIdx, playerInfos } from '../../../features/dataSlice';
+import { useSelector } from 'react-redux';
 
 function LeftPanel() {
 
@@ -15,49 +17,30 @@ function LeftPanel() {
     const handleClose = (value) => {
         setOpen(false);
     };
+
+    const infos = useSelector(playerInfos)
+    const cards = useSelector(allPlayerHand)
+    const goals = useSelector(allGoals)
+    const currIdx = useSelector(currentIdx)
     
     return (
         <div className="leftPanel">
-            <OpponentRow 
-                playerColor="red" 
-                playerName="Anti" 
-                playerCards="8+" 
-                playerGoals="2"
-                playerScore="36"
-                playerTrainCount="20" 
-                rounds="3" />
-            <OpponentRow 
-                playerColor="purple" 
-                playerName="Player2" 
-                playerCards="1" 
-                playerGoals="2"
-                playerScore="18"
-                playerTrainCount="20" 
-                rounds="3" />
-            <OpponentRow 
-                playerColor="green" 
-                playerName="Player3" 
-                playerCards="5" 
-                playerGoals="2"
-                playerScore="52"
-                playerTrainCount="7" 
-                rounds="3" />
-            <OpponentRow 
-                playerColor="blue" 
-                playerName="Player4" 
-                playerCards="8+" 
-                playerGoals="2"
-                playerScore="52"
-                playerTrainCount="18" 
-                rounds="3" />
-            <OpponentRow 
-                playerColor="orange" 
-                playerName="Player5" 
-                playerCards="4" 
-                playerGoals="1"
-                playerScore="22"
-                playerTrainCount="12" 
-                rounds="3" />
+
+            {infos.map((info, idx) => {
+                    console.log(cards[idx].map(x => x.count).reduce((a, b) => a + b))
+                    return <OpponentRow
+                                playerColor={info.playerColor} 
+                                playerName={info.name}
+                                playerCards={cards[idx].map(x => x.count).reduce((a, b) => a + b)}
+                                playerGoals={goals[idx].length}
+                                playerTrainCount={info.playerTrainCount}
+                                rounds={info.rounds}
+                                seed={info.seed}
+                                isActive={idx == currIdx}
+                                key={idx}
+                                />
+                    })}
+            
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                 Előzmények
             </Button>

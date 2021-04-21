@@ -30,7 +30,10 @@ export const dataSlice = createSlice({
     buyingArrays: [],
     openBuyingOptions: false,
     buyingOpts: [],
-    playerLines: []
+    playerLines: [],
+    isHovering: false,
+    playerInfos: [],
+    bigLineData: []
   },
   reducers: {
     setPlayerCount: (state, action) => {
@@ -39,6 +42,7 @@ export const dataSlice = createSlice({
     initPlayerHands: (state) => {
         //clearing all players hand
         state.playerHands = []
+        state.bigLineData = []
         state.currentPlayer = 0
 
         Array.from(Array(state.playerCount).keys()).map(i => {
@@ -63,6 +67,20 @@ export const dataSlice = createSlice({
         //shuffling destination cards
         shuffle(state.destinations, 10)
         shuffle(state.longDestinations, 10)
+
+        Array.from(Array(state.playerCount).keys()).map(i => {
+            state.bigLineData.push([])
+            state.playerInfos.push([])
+            const seed = Math.floor(Math.random() * 10000)
+            state.playerInfos[i] = {
+                name: 'Player' + (i+1),
+                playerColor: colors[i],
+                playerScore: 0,
+                playerTrainCount: 45,
+                rounds: 1,
+                seed: seed
+            }
+        })
     },
     initOnBoardCars: (state) => {
         state.onBoardCards = []
@@ -90,9 +108,7 @@ export const dataSlice = createSlice({
         }
 
         if(state.drawedCards == 2){
-            state.currentPlayer += 1
-            state.currentPlayer %= state.playerCount
-            state.drawedCards = 0    
+            nextPlayer(state)
         }
 
         if(state.onBoardCards.filter(x => x == 'Joker').length >= 3){
@@ -132,8 +148,13 @@ export const dataSlice = createSlice({
         //putting back the unused options
         state.destinations = state.destinations.concat(action.payload.returnToDeck)
         state.currentPlayer++
-        if(state.currentPlayer == state.playerCount){
+        if(state.gameState == 'DESTINATION_IN_GAME'){
             state.gameState = 'IN_GAME'
+        }
+        else if(state.currentPlayer == state.playerCount){
+            state.gameState = 'IN_GAME'
+            state.destinations = state.destinations.concat(state.longDestinations)
+            shuffle(state.destinations, 10)
         }
         state.currentPlayer %= state.playerCount
     },
@@ -146,6 +167,7 @@ export const dataSlice = createSlice({
         state.hoveredData.toCity = action.payload.to
     },
     selectFirstCity: (state, action) => {
+        if(state.drawedCards > 0 || state.gameState != 'IN_GAME') return
         state.selectedFirstCity = state.selectedFirstCity == action.payload ? '' : action.payload
         state.neighbourCities = []
         state.buyingArrays = []
@@ -187,43 +209,111 @@ export const dataSlice = createSlice({
         console.log(boughtWith)
         state.playerHands[state.currentPlayer].filter(x => x.color == boughtWith[0].color.capitalize())[0].count -= boughtWith[0].count
         state.playerHands[state.currentPlayer].filter(x => x.color == boughtWith[1].color.capitalize())[0].count -= boughtWith[1].count
+        
+        let buildedValue = 0
         for(let i = 1; i <= Object.keys(ticketToRideData.connections).length; ++i){
-            if(ticketToRideData.connections[i].fromCity == state.selectedFirstCity
-                && ticketToRideData.connections[i].toCity == state.buyingOpts.city){
-                    state.playerLines[state.currentPlayer].push({
-                        fromCity: state.selectedFirstCity,
-                        toCity: state.buyingOpts.city,
-                        color: colors[state.currentPlayer]
-                    })
-                    break
-            }else if(ticketToRideData.connections[i].toCity == state.selectedFirstCity
-                && ticketToRideData.connections[i].fromCity == state.buyingOpts.city){
-                    state.playerLines[state.currentPlayer].push({
-                        toCity: state.selectedFirstCity,
-                        fromCity: state.buyingOpts.city,
-                        color: colors[state.currentPlayer]
-                    })
-                    break
+            if((ticketToRideData.connections[i].fromCity == state.selectedFirstCity && ticketToRideData.connections[i].toCity == state.buyingOpts.city) || (ticketToRideData.connections[i].toCity == state.selectedFirstCity && ticketToRideData.connections[i].fromCity == state.buyingOpts.city)){
+                buildedValue = ticketToRideData.connections[i].elements.length
             }
         }
+
         state.playerLines[state.currentPlayer].push({
             fromCity: state.selectedFirstCity,
             toCity: state.buyingOpts.city,
             color: colors[state.currentPlayer]
         })
-    },
-    nextPlayer: (state) => {
-        state.currentPlayer++
-        state.currentPlayer %= state.playerCount
-        state.hoveredData = {
-            'fromCity': '',
-            'toCity': ''
+
+        const appendable = {
+            fromCity: state.selectedFirstCity,
+            toCity: state.buyingOpts.city
         }
-        state.selectedGoalIndex = 0
+
+        //algorithm to concat cities
+        let breaked = false
+        for(let i = 0; i < state.bigLineData[state.currentPlayer].length; ++i){
+            const set = state.bigLineData[state.currentPlayer][i]
+            if(set.data.includes(appendable.fromCity)){
+                set.data.push(appendable.toCity)
+                set.value += buildedValue
+                breaked = true
+                break
+            }else if(set.data.includes(appendable.toCity)){
+                set.data.push(appendable.fromCity)
+                set.value += buildedValue
+                breaked = true
+                break
+            }
+        }
+        if(!breaked){
+            const arr = [appendable.fromCity, appendable.toCity]
+            state.bigLineData[state.currentPlayer].push({
+                data: arr,
+                value: buildedValue
+            })
+        }
+        let indexes = [-1, -1]
+        for(let i = 0; i < state.bigLineData[state.currentPlayer].length; ++i){
+            for(let j = 0; j < state.bigLineData[state.currentPlayer][i].data.length; ++j){
+                for(let k = i + 1; k < state.bigLineData[state.currentPlayer].length; ++k){
+                    console.log(state.bigLineData[state.currentPlayer][k])
+                    console.log(state.bigLineData[state.currentPlayer][i].data[j])
+                    console.log('-----------')
+                    if(state.bigLineData[state.currentPlayer][k].data.includes(state.bigLineData[state.currentPlayer][i].data[j])){
+                        indexes[0] = i
+                        indexes[1] = k
+                        break
+                    }
+                }
+            }
+        }
+        if(indexes[0] != -1 && indexes[1] != -1){
+            state.bigLineData[state.currentPlayer][indexes[0]] = [...new Set(state.bigLineData[state.currentPlayer][indexes[0]].concat(state.bigLineData[state.currentPlayer][indexes[1]]))]
+            state.bigLineData[state.currentPlayer][indexes[0]].value += state.bigLineData[state.currentPlayer][indexes[1]].value
+            state.bigLineData[state.currentPlayer].splice(indexes[1], 1)
+        }
+
+        for(let i = 0; i < state.bigLineData[state.currentPlayer].length; ++i){
+            const data = state.bigLineData[state.currentPlayer][i].data
+            for(let j = 0; j < state.playerGoals[state.currentPlayer].length; ++j){
+                const currentGoal = state.playerGoals[state.currentPlayer][j]
+                if(data.includes(currentGoal.fromCity) && data.includes(currentGoal.toCity)){
+                    state.playerGoals[state.currentPlayer][j].completed = true
+                }
+            }
+        }
+
+        state.buyingOpts = []
         state.selectedFirstCity = ''
+        nextPlayer(state)
+    },
+    hoveringGoal: (state, action) => {
+        state.isHovering = action.payload
+    },
+    drawDestinationsInGame: (state, action) => {
+        if(state.destinations.length == 0) return
+        state.gameState = 'DESTINATION_IN_GAME'
+        state.playerGoalOptions[state.currentPlayer] = []
+        Array.from(Array(state.destinations.length < 3 ? state.destinations.length : 3).keys()).map(i => {
+            state.playerGoalOptions[state.currentPlayer].push(state.destinations.shift())
+        })
     }
-  }
+}
 });
+
+function nextPlayer(state){
+    state.currentPlayer++
+    state.currentPlayer %= state.playerCount
+    state.hoveredData = {
+        'fromCity': '',
+        'toCity': ''
+    }
+    state.selectedGoalIndex = 0
+    state.selectedFirstCity = ''
+    state.buyingOpts = []
+    state.isHovering = false
+    state.neighbourCities = []
+    state.drawedCards = 0
+}
 
 function shuffle(array, times) {
     for(let i = 0; i < times; ++i) {
@@ -268,7 +358,33 @@ function canPayForIt(cardsInHand, color, length){
             return false
         }
     }else{
-
+        colors.map(ccolor => {
+            const matchingCards = cardsInHand.filter(x => x.color == ccolor.capitalize()).length > 0  ? cardsInHand.filter(x => x.color == ccolor.capitalize())[0].count : 0
+            const jokerCards = cardsInHand.filter(x => x.color == 'Joker').length > 0  ? cardsInHand.filter(x => x.color == 'Joker')[0].count : 0
+            console.log(matchingCards + jokerCards)
+            if((matchingCards + jokerCards) >= length){
+                    console.log('IGAZ')
+                    for(let i = 0; i <= length; ++i){
+                        if(matchingCards >= length - i && jokerCards >= i){
+                            let array = []
+                            array.push({
+                                'color': ccolor,
+                                'count': length - i
+                            })
+                            array.push({
+                                'color': 'Joker',
+                                'count': i
+                            })
+                            result.push(array)
+                        }
+                    }
+                }
+        })
+        if(result.length == 0){
+            return false
+        }else{
+            return result
+        }
     }
 }
 
@@ -288,7 +404,9 @@ export const {
     setHoveredData,
     selectFirstCity,
     selectSecondCity,
-    build
+    build,
+    hoveringGoal,
+    drawDestinationsInGame
  } = dataSlice.actions
 
 export const onBoardCards = state => state.data.onBoardCards
@@ -305,9 +423,10 @@ export const neighbourCitiesData = state => state.data.neighbourCities
 export const buyingOpts = state => state.data.buyingOpts
 export const openBuying = state => state.data.openBuyingOptions
 export const playerLines = state => state.data.playerLines
-//export const actualPlayer = state => state.data
-
-// export const selectOpenMail = state => state.mail.selectedMail
-// export const selectSendMessageIsOpen = state => state.mail.sendMessageIsOpen;
+export const isHovering = state => state.data.isHovering
+export const playerInfos = state => state.data.playerInfos
+export const allPlayerHand = state => state.data.playerHands
+export const allGoals = state => state.data.playerGoals
+export const currentIdx = state => state.data.currentPlayer
 
 export default dataSlice.reducer

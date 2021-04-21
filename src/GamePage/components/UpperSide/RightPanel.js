@@ -16,7 +16,7 @@ function RightPanel() {
         <div className="rightPanel">
             <Deck coverImg="Cover" count={trainCardsLength} />
             <Drawer />
-            <Deck coverImg="Cover" count={goalCardsLength} />
+            <Deck coverImg="Cover" count={goalCardsLength} goalDeck={true} />
         </div>
     )
 }

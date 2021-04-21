@@ -10,7 +10,6 @@ import { gameState, actualPlayerHand, actualPlayerGoals } from '../../../feature
 function DownSide() {
 
     const cardsInHand = useSelector(actualPlayerHand)
-
     const goalCards = useSelector(actualPlayerGoals)
 
     const [begin, setBegin] = useState(false)
@@ -18,10 +17,10 @@ function DownSide() {
 
     return (
         <div className="downSide">
-            {earlyGameState != 'DESTINATION_CHOOSING' &&
+            {earlyGameState != 'DESTINATION_CHOOSING' && earlyGameState != 'DESTINATION_IN_GAME' &&
             <GoalCard data={goalCards} />}
-            {earlyGameState != 'DESTINATION_CHOOSING' && <PlayerHand cards={cardsInHand} />}
-            {earlyGameState == 'DESTINATION_CHOOSING' && <DrawDestinationCards clickEvent={() => setBegin(true)} />}
+            {earlyGameState != 'DESTINATION_CHOOSING' && earlyGameState != 'DESTINATION_IN_GAME' && <PlayerHand cards={cardsInHand} />}
+            {(earlyGameState == 'DESTINATION_CHOOSING' || earlyGameState == 'DESTINATION_IN_GAME') && <DrawDestinationCards clickEvent={() => setBegin(true)} />}
         </div>
     )
 }

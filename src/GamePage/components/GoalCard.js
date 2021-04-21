@@ -8,8 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
-import { useDispatch } from 'react-redux';
-import { stepSelectedGoalIndex } from '../../features/dataSlice'
+import { useDispatch, useSelector } from 'react-redux';
+import { stepSelectedGoalIndex, hoveringGoal, actualGoalIndex } from '../../features/dataSlice'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -51,26 +51,41 @@ function GoalCard({data}) {
     const theme = useTheme();
     const [actual, setActual] = useState(0);
     const dispatch = useDispatch()
+    const goalIndex = useSelector(actualGoalIndex)
 
+    useEffect(() => {
+      setActual(goalIndex)
+    }, [goalIndex])
+    
     function stepCities(x) {
       setActual(mod(actual + x, data.length))
       dispatch(stepSelectedGoalIndex(x))
     }
 
+    function isHovering(){
+      dispatch(hoveringGoal(true))
+    }
+    
+    function leavingHover(){
+      dispatch(hoveringGoal(false))
+    }
+
     return (
-        <div className="goalCards">
-            <Card className={classes.root}>
+        <div className="goalCards"
+          onMouseEnter={() => isHovering()}
+          onMouseLeave={() => leavingHover()} >
+            <Card className={classes.root} on>
                 <div className={classes.details}>
                     <CardContent className={classes.content}>
                     <Typography component="h6" variant="h6">
-                        {data[actual].fromCity}
+                        {data[actual]?.fromCity}
 
                         -
 
-                        {data[actual].toCity}
+                        {data[actual]?.toCity}
                     </Typography>
                     <Typography variant="subtitle1" color="textSecondary">
-                        <p className="circle">{data[actual].value}</p>
+                        <p className="circle">{data[actual]?.value}</p>
                     </Typography>
                     </CardContent>
                     <div className={classes.controls}>
@@ -78,7 +93,7 @@ function GoalCard({data}) {
                         {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
                     </IconButton>
                     <IconButton>
-                        <DoneAllIcon style={{color : data[actual].completed ? 'green' : 'black'}} />
+                        <DoneAllIcon style={{color : data[actual]?.completed ? 'green' : 'black'}} />
                     </IconButton>
                     <IconButton aria-label="next" onClick={() => stepCities(1)}>
                         {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
