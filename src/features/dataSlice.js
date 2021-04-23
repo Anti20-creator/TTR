@@ -1,3 +1,4 @@
+import { StarRateTwoTone } from '@material-ui/icons';
 import { createSlice } from '@reduxjs/toolkit'
 import TrainDeck from '../Decks/TrainDeck';
 import { ticketToRideData } from '../mapdata/MapData';
@@ -33,7 +34,10 @@ export const dataSlice = createSlice({
     playerLines: [],
     isHovering: false,
     playerInfos: [],
-    bigLineData: []
+    bigLineData: [],
+    remainingRounds: null,
+    showCompleted: [],
+    throwDeck: []
   },
   reducers: {
     setPlayerCount: (state, action) => {
@@ -90,31 +94,44 @@ export const dataSlice = createSlice({
     },
     drawCardToBoard: (state, action) => {
         if(state.gameState != 'IN_GAME' 
-            || (action.payload.color == 'Joker' && state.drawedCards > 0)) return
+        || (action.payload.color == 'Joker' && state.drawedCards > 0)) return
         if(action.payload.color == 'Cover'){
+            if(state.onBoardCards.length == 0){
+                generateDeck(state)
+            }
             const drawed = state.trainCards.shift()
             state.playerHands[state.currentPlayer].filter(x => x.color == drawed)[0].count += 1
             state.drawedCards++
         }else{
             state.playerHands[state.currentPlayer].filter(x => x.color == action.payload.color)[0].count += 1
+            if(state.onBoardCards.length == 0){
+                generateDeck(state)
+            }
             state.onBoardCards[action.payload.idx] = state.trainCards.shift()
             if(action.payload.color == 'Joker'){
+                /*
                 state.currentPlayer += 1
                 state.currentPlayer %= state.playerCount
                 state.drawedCards = 0
+                */
+               nextPlayer(state)
             }else{
                 state.drawedCards++
             }
         }
-
+        
         if(state.drawedCards == 2){
             nextPlayer(state)
         }
 
-        if(state.onBoardCards.filter(x => x == 'Joker').length >= 3){
-            state.trainCards.concat(state.onBoardCards)
+        while(state.onBoardCards.filter(x => x == 'Joker').length >= 3){
+            //state.trainCards.concat(state.onBoardCards)
+            state.throwDeck.concat(state.onBoardCards)
             state.onBoardCards = []
             Array.from(Array(5).keys()).map(i => {
+                if(state.onBoardCards.length == 0){
+                    generateDeck(state)
+                }
                 state.onBoardCards.push(state.trainCards.shift())
             })
         }
@@ -161,10 +178,30 @@ export const dataSlice = createSlice({
     stepSelectedGoalIndex: (state, action) => {
         state.selectedGoalIndex += action.payload
         state.selectedGoalIndex = mod(state.selectedGoalIndex, state.playerGoals[state.currentPlayer].length)
+        
+        const fromCity = state.playerGoals[state.currentPlayer][state.selectedGoalIndex].fromCity
+        const toCity = state.playerGoals[state.currentPlayer][state.selectedGoalIndex].toCity
+        const completed = state.playerGoals[state.currentPlayer][state.selectedGoalIndex]?.completed
+
+        if(completed == true){
+            for(let i = 0; i < state.bigLineData[state.currentPlayer].length; ++i){
+                const item = state.bigLineData[state.currentPlayer][i]
+                if(item.data.includes(fromCity) && item.data.includes(toCity)){
+                    const filtered = state.playerLines[state.currentPlayer].filter(x => item.data.includes(x.fromCity) && item.data.includes(x.fromCity))
+                    console.log('FILTERED')
+                    console.log(filtered)
+                    state.showCompleted = filtered 
+                    break
+                }
+            }
+        }else{
+            state.showCompleted = []
+        }
     },
     setHoveredData: (state, action) => {
         state.hoveredData.fromCity = action.payload.from
         state.hoveredData.toCity = action.payload.to
+        
     },
     selectFirstCity: (state, action) => {
         if(state.drawedCards > 0 || state.gameState != 'IN_GAME') return
@@ -176,13 +213,14 @@ export const dataSlice = createSlice({
         for(let i = 1; i <= Object.keys(ticketToRideData.connections).length; ++i){
             const item = ticketToRideData.connections[i]
             
-            if(item?.fromCity == state.selectedFirstCity 
+            if(item?.fromCity == state.selectedFirstCity
                 && canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length)){
                 newItems.push(item.toCity)
                 console.log(item.toCity)
                 state.buyingArrays.push({
                     city: item.toCity,
-                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length)
+                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length),
+                    color: item.color
                 })
             }
             if(item?.toCity == state.selectedFirstCity
@@ -191,41 +229,128 @@ export const dataSlice = createSlice({
                 console.log(item.fromCity)
                 state.buyingArrays.push({
                     city: item.fromCity,
-                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length)
+                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length),
+                    color: item.color
                 })
             }
         }
+
+        //delete indexes, which are already bought from someone
+        let deleteIndexes = []
+        let blacklist = []
+        for(let i = 0; i < state.buyingArrays.length; ++i){
+            for(let j = 0; j < state.playerLines.length; ++j){
+                for(let k = 0; k < state.playerLines[j].length; ++k){
+                    if(state.playerLines[j][k].fromCity == state.buyingArrays[i].city
+                        && state.playerLines[j][k].toCity == state.selectedFirstCity
+                        && state.playerLines[j][k].trainColor == state.buyingArrays[i].color
+                        && blacklist.filter((item) => item.j == j && item.k == k).length == 0
+                    ){
+                        console.log(state.playerLines[j][k])
+                        console.log(state.buyingArrays[i])
+                        deleteIndexes.push(i)
+                        blacklist.push({'j': j, 'k': k})
+                    }
+                    else if(state.playerLines[j][k].toCity == state.buyingArrays[i].city
+                        && state.playerLines[j][k].fromCity == state.selectedFirstCity
+                        && state.playerLines[j][k].trainColor == state.buyingArrays[i].color
+                        && blacklist.filter((item) => item.j == j && item.k == k).length == 0
+                    ){
+                        console.log(state.playerLines[j][k])
+                        console.log(state.buyingArrays[i])
+                        deleteIndexes.push(i)
+                        blacklist.push({'j': j, 'k': k})
+                    }
+                    else if(state.playerLines[j][k].fromCity == state.buyingArrays[i].city
+                        && state.playerLines[j][k].toCity == state.selectedFirstCity
+                        && state.playerLines[j][k].color == colors[state.currentPlayer])
+                    {
+                        console.log(state.playerLines[j][k])
+                        console.log(state.buyingArrays[i])
+                        deleteIndexes.push(i)
+                        blacklist.push({'j': j, 'k': k})
+                    }else if(state.playerLines[j][k].toCity == state.buyingArrays[i].city
+                        && state.playerLines[j][k].fromCity == state.selectedFirstCity
+                        && state.playerLines[j][k].color == colors[state.currentPlayer]
+                    ){
+                        console.log(state.playerLines[j][k])
+                        console.log(state.buyingArrays[i])
+                        deleteIndexes.push(i)
+                        blacklist.push({'j': j, 'k': k})
+                    }
+                }
+            }
+        }
+        [...new Set(deleteIndexes)].reverse().map(index => {
+            console.log('OUT: ')
+            console.log(state.buyingArrays[index])
+            state.buyingArrays.splice(index, 1)
+            newItems.splice(index, 1)
+        })
         state.neighbourCities = state.neighbourCities.concat([...new Set(newItems)])
     },
     selectSecondCity: (state, action) => {
         if(state.selectedFirstCity == '') return
-        state.buyingOpts = state.buyingArrays.find(arr => arr.city == action.payload)
+        state.buyingOpts = state.buyingArrays.filter(arr => arr.city == action.payload)
         state.openBuyingOptions = true
     },
     build: (state, action) => {
         state.openBuyingOptions = false
         if(action.payload == undefined) return
-        const boughtWith = state.buyingOpts.options[action.payload]
+        const boughtWith = state.buyingOpts[action.payload.i].options[action.payload.j] //state.buyingOpts.options[action.payload]
         console.log(boughtWith)
+        boughtWith.map(item => {
+            Array.from(Array(item.count).keys()).map(i => {
+                state.throwDeck.push(item.color)
+            })
+        })
+        /*we have to check the color on the map
+        Option1: the color is the one we are paying with
+        Option2: it is a gray trainColor and we are paying with a random trainColor
+        */
+       let trainColor = ''
+        if(boughtWith[0].color != 'Joker'){
+            trainColor = boughtWith[0].color
+        }else{
+            trainColor = boughtWith[1].color
+        }
+        
+        let buildedValue = 0
+        let isPossibleColor = false
+        for(let i = 1; i <= Object.keys(ticketToRideData.connections).length; ++i){
+            if((ticketToRideData.connections[i].fromCity == state.selectedFirstCity && ticketToRideData.connections[i].toCity == state.buyingOpts[action.payload.i].city) || (ticketToRideData.connections[i].toCity == state.selectedFirstCity && ticketToRideData.connections[i].fromCity == state.buyingOpts[action.payload.i].city)){
+                buildedValue = ticketToRideData.connections[i].elements.length
+                console.log('ÁRAK MEGTALÁLVA')
+                console.log(ticketToRideData.connections[i].elements)
+                console.log(buildedValue)
+                //trainColor = ticketToRideData.connections[i].color
+                if(ticketToRideData.connections[i].color == trainColor) isPossibleColor = true
+            }
+        }
+        if(state.playerInfos[state.currentPlayer].playerTrainCount < buildedValue) return
+
+        state.playerInfos[state.currentPlayer].playerTrainCount -= buildedValue
+        state.playerInfos[state.currentPlayer].playerScore += pointCounter(buildedValue)
+
+        if(state.playerInfos[state.currentPlayer].playerTrainCount <= 2){
+            state.remainingRounds = 1
+        }
+
         state.playerHands[state.currentPlayer].filter(x => x.color == boughtWith[0].color.capitalize())[0].count -= boughtWith[0].count
         state.playerHands[state.currentPlayer].filter(x => x.color == boughtWith[1].color.capitalize())[0].count -= boughtWith[1].count
         
-        let buildedValue = 0
-        for(let i = 1; i <= Object.keys(ticketToRideData.connections).length; ++i){
-            if((ticketToRideData.connections[i].fromCity == state.selectedFirstCity && ticketToRideData.connections[i].toCity == state.buyingOpts.city) || (ticketToRideData.connections[i].toCity == state.selectedFirstCity && ticketToRideData.connections[i].fromCity == state.buyingOpts.city)){
-                buildedValue = ticketToRideData.connections[i].elements.length
-            }
-        }
-
+        if(!isPossibleColor) trainColor = 'gray'
+        //alert(state.selectedFirstCity)
         state.playerLines[state.currentPlayer].push({
             fromCity: state.selectedFirstCity,
-            toCity: state.buyingOpts.city,
-            color: colors[state.currentPlayer]
+            toCity: state.buyingOpts[action.payload.i].city,
+            color: colors[state.currentPlayer],
+            trainColor: action.payload.color
         })
 
         const appendable = {
             fromCity: state.selectedFirstCity,
-            toCity: state.buyingOpts.city
+            toCity: state.buyingOpts[action.payload.i].city
         }
 
         //algorithm to concat cities
@@ -255,9 +380,9 @@ export const dataSlice = createSlice({
         for(let i = 0; i < state.bigLineData[state.currentPlayer].length; ++i){
             for(let j = 0; j < state.bigLineData[state.currentPlayer][i].data.length; ++j){
                 for(let k = i + 1; k < state.bigLineData[state.currentPlayer].length; ++k){
-                    console.log(state.bigLineData[state.currentPlayer][k])
-                    console.log(state.bigLineData[state.currentPlayer][i].data[j])
-                    console.log('-----------')
+                    //console.log(state.bigLineData[state.currentPlayer][k])
+                    //console.log(state.bigLineData[state.currentPlayer][i].data[j])
+                    //console.log('-----------')
                     if(state.bigLineData[state.currentPlayer][k].data.includes(state.bigLineData[state.currentPlayer][i].data[j])){
                         indexes[0] = i
                         indexes[1] = k
@@ -267,7 +392,7 @@ export const dataSlice = createSlice({
             }
         }
         if(indexes[0] != -1 && indexes[1] != -1){
-            state.bigLineData[state.currentPlayer][indexes[0]] = [...new Set(state.bigLineData[state.currentPlayer][indexes[0]].concat(state.bigLineData[state.currentPlayer][indexes[1]]))]
+            state.bigLineData[state.currentPlayer][indexes[0]].data = [...new Set(state.bigLineData[state.currentPlayer][indexes[0]].data.concat(state.bigLineData[state.currentPlayer][indexes[1]].data))]
             state.bigLineData[state.currentPlayer][indexes[0]].value += state.bigLineData[state.currentPlayer][indexes[1]].value
             state.bigLineData[state.currentPlayer].splice(indexes[1], 1)
         }
@@ -276,8 +401,10 @@ export const dataSlice = createSlice({
             const data = state.bigLineData[state.currentPlayer][i].data
             for(let j = 0; j < state.playerGoals[state.currentPlayer].length; ++j){
                 const currentGoal = state.playerGoals[state.currentPlayer][j]
-                if(data.includes(currentGoal.fromCity) && data.includes(currentGoal.toCity)){
+                if(data && data.includes(currentGoal.fromCity) && data.includes(currentGoal.toCity) 
+                    && state.playerGoals[state.currentPlayer][j].completed != false){
                     state.playerGoals[state.currentPlayer][j].completed = true
+                    state.playerInfos[state.currentPlayer].playerScore += state.playerGoals[state.currentPlayer][j].value
                 }
             }
         }
@@ -301,7 +428,30 @@ export const dataSlice = createSlice({
 });
 
 function nextPlayer(state){
+    state.playerInfos[state.currentPlayer].rounds++
     state.currentPlayer++
+    if(state.currentPlayer == state.playerCount && state.remainingRounds == 1){
+        state.remainingRounds = 0
+    }
+    if(state.currentPlayer == state.playerCount && state.remainingRounds == 0){
+        state.gameState = 'END_GAME'
+        let maximums = Array(state.playerCount)
+        for(let i = 0; i < state.bigLineData.length; ++i){
+            for(let j = 0; j < state.bigLineData[i].length; ++j){
+                const item = state.bigLineData[i][j]
+
+                if(item.value > (maximums[i] == undefined ? 0 : maximums[i])){
+                    maximums[i] = item.value
+                }
+            }
+        }
+        let maxValue = maximums.reduce((a, b) => b > a ? b : a)
+        maximums.map((value, index) => {
+            if(value == maxValue){
+                state.playerInfos[index].playerScore += 10
+            }
+        })
+    }
     state.currentPlayer %= state.playerCount
     state.hoveredData = {
         'fromCity': '',
@@ -353,12 +503,15 @@ function canPayForIt(cardsInHand, color, length){
                         result.push(array)
                     }
                 }
+                for(let i = 0; i < result.length; ++i){
+                    result[i] = [...new Set(result[i])]
+                }
                 return result
         }else{
             return false
         }
     }else{
-        colors.map(ccolor => {
+        colors.filter(ccolor => ccolor != 'Joker').map(ccolor => {
             const matchingCards = cardsInHand.filter(x => x.color == ccolor.capitalize()).length > 0  ? cardsInHand.filter(x => x.color == ccolor.capitalize())[0].count : 0
             const jokerCards = cardsInHand.filter(x => x.color == 'Joker').length > 0  ? cardsInHand.filter(x => x.color == 'Joker')[0].count : 0
             console.log(matchingCards + jokerCards)
@@ -379,6 +532,9 @@ function canPayForIt(cardsInHand, color, length){
                         }
                     }
                 }
+            for(let i = 0; i < result.length; ++i){
+                result[i] = [...new Set(result[i])]
+            }
         })
         if(result.length == 0){
             return false
@@ -386,6 +542,44 @@ function canPayForIt(cardsInHand, color, length){
             return result
         }
     }
+}
+
+function notBoughtFromOthers(city, playerLines, color) {
+    playerLines.map(player => {
+        player.map(line => {
+            if(line.city == city && line.color == color) return false
+        })
+    })
+    return true
+}
+
+function pointCounter(length){
+    switch(length){
+        case 1:
+            return 1;
+            break;
+        case 2:
+            return 2;
+            break;
+        case 3:
+            return 4;
+            break;
+        case 4:
+            return 7;
+            break;
+        case 6:
+            return 15;
+            break;
+        case 8:
+            return 21;
+            break;
+    }
+}
+
+function generateDeck(state) {
+    shuffle(state.throwDeck, 10)
+    state.trainCards = state.throwDeck
+    state.throwDeck = []
 }
 
 String.prototype.capitalize = function() {
@@ -428,5 +622,6 @@ export const playerInfos = state => state.data.playerInfos
 export const allPlayerHand = state => state.data.playerHands
 export const allGoals = state => state.data.playerGoals
 export const currentIdx = state => state.data.currentPlayer
+export const showCompletedLine = state => state.data.showCompleted
 
 export default dataSlice.reducer

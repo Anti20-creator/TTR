@@ -13,3 +13,28 @@
     background-color: red;
     width: 100px;
 }
+
+.map .MuiDialog-paperWidthSm{
+    max-width: none !important;
+}
+
+.map .MuiPaper-root{
+    width: 65% !important;
+}
+
+.MuiDialog-paperWidthMd {
+    max-width: 960px;
+    width: 70% !important;
+}
+
+.map h2 {
+    text-align: center;
+}
+
+.MuiPaper-root div {
+    justify-content: center;
+    align-items: center;
+}
+.MuiPaper-root div button {
+    margin-left: 1rem;
+}

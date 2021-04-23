@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import './Map.css'
 import { ticketToRideData } from '../../../mapdata/MapData.js'
 import City from './City.js'
@@ -17,7 +17,9 @@ import {
     buyingOpts,
     openBuying,
     build,
-    playerLines
+    playerLines,
+    showCompletedLine,
+    isHovering
  } from '../../../features/dataSlice'
 import { Button, Dialog, DialogTitle } from '@material-ui/core'
 import PlayerHand from '../DownSide/PlayerHand'
@@ -27,9 +29,12 @@ function Map() {
     const dispatch = useDispatch()
     const index = useSelector(actualGoalIndex)
     const goals = useSelector(actualPlayerGoals)
+    //const [buyingOptions, setB] = useState([])
     const buyingOptions = useSelector(buyingOpts)
     const openBuyingPanel = useSelector(openBuying)
     const lines = useSelector(playerLines)
+    const completedOne = useSelector(showCompletedLine)
+    const hovering = useSelector(isHovering)
     const url = process.env.PUBLIC_URL + 'ticket-to-ride-euorpe-map.jpg'
     console.log(url)
 
@@ -57,6 +62,10 @@ function Map() {
     useEffect(() => {
 
     }, [openBuyingPanel])
+
+    useEffect(() => {
+        console.log(completedOne)
+    }, [completedOne])
 
     function closeBuyingPanel() {
         dispatch(build())
@@ -105,29 +114,59 @@ function Map() {
                 //return (<div></div>)
             })}
 
-            {lines.map(player => player.map(line => {return (<LineBetweenCities
+            {lines.map((player, idxPlayer) => player.map((line, idxLine) => {
+                            let beforeValue = 0
+                            lines.map((player2, idxPlayer2) => player2.map((line2, idxLine2) => {
+                                if(!(idxPlayer2 >= idxPlayer && idxLine2 >= idxLine) && line2.fromCity == line.fromCity
+                                    && line2.toCity == line.toCity
+                                    && line2.color != line.color){
+                                        beforeValue++
+                                }
+                            }))
+                            let stroke = 3
+                            console.log('MAP OUTPUT')
+                            if(hovering && completedOne.filter(x => x.fromCity == line.fromCity && x.toCity == line.toCity).length > 0){
+                                console.log(line.fromCity)
+                                console.log(line.toCity)
+                                stroke = 6 
+                            }
+                            return (<LineBetweenCities
                                         fromCity={line.fromCity}
                                         toCity={line.toCity} 
                                         color={line.color}
+                                        before={line.trainColor == 'gray' ? beforeValue : 0}
+                                        trainColor={line.trainColor == 'gray' ? 'any' : line.trainColor}
+                                        stroke={stroke}
                                         key={line.fromCity}
                                         />)} 
                                         )
-            )}
-
+                            )}
             
             {console.log('LINES: ', lines)}
 
-            <Dialog style={{overflow: 'scroll'}} open={openBuyingPanel} onClose={closeBuyingPanel} >
+
+            <Dialog 
+                style={{overflow: 'scroll'}}
+                open={openBuyingPanel} 
+                onClose={closeBuyingPanel}
+                maxWidth={'md'} >
                 <DialogTitle id="simple-dialog-title">Építési opciók</DialogTitle>
-                {buyingOptions.options && buyingOptions.options.map((option, i) => {
-                    return (
-                        <div key={i} style={{display: 'flex'}}>
-                            <PlayerHand cards={option} />
-                            <Button onClick={() => dispatch(build(i))}>ÉPÍT</Button>
-                        </div>
-                    )
+                {buyingOptions && buyingOptions.length > 0 && buyingOptions.map((options, i) => {
+                    console.log(options)
+                    return options.options.map((option, j) => {
+                        return (
+                            <div key={i} style={{display: 'flex'}}>
+                                <PlayerHand cards={option} />
+                                <Button style={{backgroundColor: options.color}} 
+                                    onClick={() => dispatch(build({
+                                        i: i,
+                                        j: j,
+                                        color: options.color
+                                    }))}>ÉPÍT</Button>
+                            </div>
+                        )
+                    })
                 })}
-                {/*buyingOptions?.options[0].color*/}
             </Dialog>
         </div>
     )

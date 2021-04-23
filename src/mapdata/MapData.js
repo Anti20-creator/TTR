@@ -491,7 +491,7 @@ export const ticketToRideData = {
         "to": "18",
         "toCity": "Frankfurt",
         "elements": [
-          { "x": 39.875, "y": 38.27392120075047 },
+          { "x": 39, "y": 38.27392120075047 }, //x: 39.875
           { "x": 41.5, "y": 35.45966228893058 }
         ],
         "color": "green",

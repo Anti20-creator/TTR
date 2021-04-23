@@ -12,7 +12,6 @@ import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
 import ExploreIcon from '@material-ui/icons/Explore';
 import Badge from '@material-ui/core/Badge';
 
-
 function OpponentRow({ playerColor, playerName, playerScore, playerCards, playerGoals, playerTrainCount, rounds, seed, isActive=false }) {
 
     return (

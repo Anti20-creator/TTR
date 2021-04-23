@@ -44,7 +44,7 @@ function City({x, y, name, modifier}) {
     useEffect(() => {
         if(gameS == 'IN_GAME' && goals && goals.length > 0 && currentlyHovered){
             if(goals[index].toCity == name || goals[index].fromCity == name){
-                console.log(name)
+                //console.log(name)
                 setActive(true)
             }else{
                 setActive(false)
@@ -56,7 +56,7 @@ function City({x, y, name, modifier}) {
     
     useEffect(() => {
         if(hoveredCities.fromCity == name || hoveredCities.toCity == name){
-            console.log(hoveredCities)
+            //console.log(hoveredCities)
             setActive(true)
         }else{
             setActive(false)

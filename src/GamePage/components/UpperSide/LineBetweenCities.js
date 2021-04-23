@@ -2,8 +2,8 @@ import React from 'react'
 import { ticketToRideData } from '../../../mapdata/MapData'
 import LineBetweenPoints from './LineBetweenPoints'
 
-function LineBetweenCities({fromX, fromY, toX, toY, fromCity, toCity, color}) {
-
+function LineBetweenCities({fromCity, toCity, color, before, trainColor, stroke}) {
+    
     let coordinates = []
     const start = Object.keys(ticketToRideData.cities).find(x => {
         return ticketToRideData.cities[x].city == fromCity
@@ -12,20 +12,25 @@ function LineBetweenCities({fromX, fromY, toX, toY, fromCity, toCity, color}) {
     let needToReverse = false   
     let between = Object.keys(ticketToRideData.connections).find(x => {
         return (ticketToRideData.connections[x].fromCity == fromCity
-        && ticketToRideData.connections[x].toCity == toCity)
+        && ticketToRideData.connections[x].toCity == toCity
+        && (ticketToRideData.connections[x].color == trainColor || trainColor == 'any'))
     })
     if(Object.keys(ticketToRideData.connections).find(x => {
         return (ticketToRideData.connections[x].fromCity == toCity
-            && ticketToRideData.connections[x].toCity == fromCity)
+            && ticketToRideData.connections[x].toCity == fromCity
+            && (ticketToRideData.connections[x].color == trainColor || trainColor == 'any'))
     })){
         between = Object.keys(ticketToRideData.connections).find(x => {
             return (ticketToRideData.connections[x].fromCity == toCity
-                && ticketToRideData.connections[x].toCity == fromCity)
+                && ticketToRideData.connections[x].toCity == fromCity
+                && (ticketToRideData.connections[x].color == trainColor || trainColor == 'any'))
         })
         needToReverse = true
     }
-    console.log(between)
-    console.log(ticketToRideData.connections[between])
+    //console.log(between)
+    //console.log('BEFOREVALUE:', before)
+    between = parseInt(between) + parseInt(before)
+    //console.log(ticketToRideData.connections[between])
     ticketToRideData.connections[between].elements.map(element => {
         coordinates.push(element)
     })
@@ -35,8 +40,8 @@ function LineBetweenCities({fromX, fromY, toX, toY, fromCity, toCity, color}) {
     })
     coordinates.push({'x': ticketToRideData.cities[end].x, 'y': ticketToRideData.cities[end].y})
 
-    console.log('Coordinates:')
-    console.log(coordinates)
+    //console.log('Coordinates:')
+    //console.log(coordinates)
 
     if(needToReverse){
         [coordinates[0], coordinates[coordinates.length-1]] = [coordinates[coordinates.length-1], coordinates[0]]
@@ -51,7 +56,8 @@ function LineBetweenCities({fromX, fromY, toX, toY, fromCity, toCity, color}) {
                                 fromY={elem.y} 
                                 toX={array[index+1].x} 
                                 toY={array[index+1].y}
-                                color={color} />
+                                color={color}
+                                stroke={stroke} />
                 }
             })}
         </div>
