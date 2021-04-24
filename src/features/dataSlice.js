@@ -445,6 +445,9 @@ function nextPlayer(state){
                 }
             }
         }
+        for(let i = 0; i < maximums.length; ++i){
+            state.playerInfos[maximums].longestTrain = maximums[i]
+        }
         let maxValue = maximums.reduce((a, b) => b > a ? b : a)
         maximums.map((value, index) => {
             if(value == maxValue){

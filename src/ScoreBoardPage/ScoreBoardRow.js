@@ -90,15 +90,15 @@ function ScoreBoardRow({idx, row, map}) {
                         </TableRow>
                         </TableHead>
                         <TableBody>
-                        {row.destinationData.map((data) => (
-                            <TableRow key={data.id}>
+                        {row.destinationData.map((data, idx) => (
+                            <TableRow key={idx}>
                                 <StyledTableCell component="th" scope="row">
-                                    {data.from}
+                                    {data.fromCity}
                                 </StyledTableCell>
-                                <StyledTableCell>{data.to}</StyledTableCell>
-                                <StyledTableCell align="center">{data.points}</StyledTableCell>
+                                <StyledTableCell>{data.toCity}</StyledTableCell>
+                                <StyledTableCell align="center">{data.value}</StyledTableCell>
                                 <StyledTableCell align="center">
-                                    {data.completed}
+                                    {data.completed ? 'igen' : 'nem'}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                     {map}

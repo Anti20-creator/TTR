@@ -8,6 +8,8 @@ import ScoreBoardRow from './ScoreBoardRow'
 import './ScoreBoardPage.css'
 import { makeStyles, withStyles } from '@material-ui/core'
 import ScoreBoardMapDialog from './ScoreBoardMapDialog'
+import { allGoals, playerInfos } from '../features/dataSlice'
+import { useSelector } from 'react-redux'
 
 function ScoreBoardPage() {
 
@@ -27,6 +29,18 @@ function ScoreBoardPage() {
             ]
         }
     }
+
+    const infos = useSelector(playerInfos)
+    const goals = useSelector(allGoals)
+
+    const rows = infos.map((info, idx) => {
+        const name = info.name
+        const allDestinations = goals[idx].length
+        const completedDestinations = goals[idx].filter(i => i.completed == true).length
+        const longestTrain = info.longestTrain
+        const points = info.playerScore
+        const destinationData = goals[idx]
+    })
 
     const rows = [
         createData('Player1', 3, 1, 15, 30),
