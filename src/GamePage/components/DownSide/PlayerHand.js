@@ -7,7 +7,7 @@ function PlayerHand({ cards }) {
         <div className="playerHand">
             {cards.filter(card => card.count > 0).map((card, idx) => {
                 return <CardInHand 
-                            color={card.color} 
+                            color={card.color.capitalize()} 
                             count={card.count} 
                             key={card.color + card.count}
                             place={idx} />

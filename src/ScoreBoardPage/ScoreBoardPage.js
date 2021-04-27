@@ -31,11 +31,11 @@ function ScoreBoardPage() {
 
     const rows = infos.map((info, idx) => {
         const name = info.name
-        const allDestinations = goals[idx].length
-        const completedDestinations = goals[idx].filter(i => i.completed == true).length
+        const allDestinations = goals[idx] ? goals[idx]?.length : 0
+        const completedDestinations = goals[idx] ? goals[idx].filter(i => i.completed == true)?.length : 0
         const longestTrain = info.longestTrain
         const points = info.playerScore
-        const destinationData = goals[idx]
+        const destinationData = goals[idx] ? goals[idx] : []
         return createData(name, allDestinations, completedDestinations, longestTrain, points, destinationData)
     })
 
@@ -93,7 +93,7 @@ function ScoreBoardPage() {
                             return (
                                 <ScoreBoardRow 
                                     idx={idx} 
-                                    key={row.name} 
+                                    key={idx} 
                                     row={row}
                                     map={map} />
                             )

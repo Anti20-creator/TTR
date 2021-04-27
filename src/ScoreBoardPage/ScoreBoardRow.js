@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Button, makeStyles, withStyles } from '@material-ui/core';
+import ScoreBoardMapDialog from './ScoreBoardMapDialog';
 
 function ScoreBoardRow({idx, row, map}) {
 
@@ -97,11 +98,11 @@ function ScoreBoardRow({idx, row, map}) {
                                 </StyledTableCell>
                                 <StyledTableCell>{data.toCity}</StyledTableCell>
                                 <StyledTableCell align="center">{data.value}</StyledTableCell>
-                                <StyledTableCell align="center">
+                                <StyledTableCell align="center" style={{color: data.completed ? 'green' : 'red'}}>
                                     {data.completed ? 'igen' : 'nem'}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                    {map}
+                                    <ScoreBoardMapDialog fromCity={data.fromCity} toCity={data.toCity} />
                                 </StyledTableCell>
                             </TableRow>
                         ))}

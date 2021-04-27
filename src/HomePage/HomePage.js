@@ -32,6 +32,7 @@ function HomePage() {
     const joinRoom = (e) => {
         e.preventDefault()
         if(joinPlayerName.trim() != "" && roomID.trim() != ""){
+            localStorage.setItem('hostPlayerName', playerName)
             localStorage.setItem('roomID', roomID)
             history.push('/room/123')
         }else{

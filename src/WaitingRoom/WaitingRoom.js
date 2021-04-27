@@ -8,7 +8,12 @@ import { useHistory } from "react-router-dom";
 import Tooltip from '@material-ui/core/Tooltip';
 import DoneIcon from '@material-ui/icons/Done';
 import { useDispatch } from 'react-redux'
-import { initPlayerHands, setPlayerCount } from '../features/dataSlice'
+import { initPlayerHands, 
+    setPlayerCount, 
+    initOnBoardCars, 
+    drawLongDestinations,
+    drawGoalOptionsForAllPlayers
+ } from '../features/dataSlice'
 
 function WaitingRoom() {
 
@@ -17,9 +22,12 @@ function WaitingRoom() {
     const dispatch = useDispatch()
 
     const startGame = () => {
+        dispatch(setPlayerCount(2))
+        dispatch(initPlayerHands())
+        dispatch(initOnBoardCars())
+        dispatch(drawLongDestinations())
+        dispatch(drawGoalOptionsForAllPlayers())
         history.push('../../game/123')
-        //dispatch(setPlayerCount(2))
-       // dispatch(initPlayerHands())
     }
     
     return (

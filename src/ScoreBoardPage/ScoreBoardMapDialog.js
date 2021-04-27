@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Map from '../GamePage/components/UpperSide/Map';
+import { useDispatch } from 'react-redux';
+import { hoveringGoal, setHoveredData } from '../features/dataSlice';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -28,12 +30,18 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function ScoreBoardMapDialog() {
+function ScoreBoardMapDialog({fromCity, toCity}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false)
+  const dispatch = useDispatch()
 
   const handleClickOpen = () => {
     setOpen(true);
+    dispatch(setHoveredData({
+      from: fromCity,
+      to: toCity
+    }))
+    dispatch(hoveringGoal(true))
   };
 
   const handleClose = () => {

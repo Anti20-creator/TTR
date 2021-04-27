@@ -80,8 +80,8 @@ export const dataSlice = createSlice({
                 name: 'Player' + (i+1),
                 playerColor: colors[i],
                 playerScore: 0,
-                playerTrainCount: 45,
-                rounds: 1,
+                playerTrainCount: 5,
+                rounds: 0,
                 seed: seed
             }
         })
@@ -96,18 +96,18 @@ export const dataSlice = createSlice({
         if(state.gameState != 'IN_GAME' 
         || (action.payload.color == 'Joker' && state.drawedCards > 0)) return
         if(action.payload.color == 'Cover'){
-            if(state.onBoardCards.length == 0){
+            const drawed = state.trainCards.shift()
+            if(state.trainCards.length == 0){
                 generateDeck(state)
             }
-            const drawed = state.trainCards.shift()
             state.playerHands[state.currentPlayer].filter(x => x.color == drawed)[0].count += 1
             state.drawedCards++
         }else{
             state.playerHands[state.currentPlayer].filter(x => x.color == action.payload.color)[0].count += 1
-            if(state.onBoardCards.length == 0){
+            state.onBoardCards[action.payload.idx] = state.trainCards.shift()
+            if(state.trainCards.length == 0){
                 generateDeck(state)
             }
-            state.onBoardCards[action.payload.idx] = state.trainCards.shift()
             if(action.payload.color == 'Joker'){
                 /*
                 state.currentPlayer += 1
@@ -119,6 +119,10 @@ export const dataSlice = createSlice({
                 state.drawedCards++
             }
         }
+
+        if(state.trainCards.length == 0){
+            generateDeck(state)
+        }
         
         if(state.drawedCards == 2){
             nextPlayer(state)
@@ -129,7 +133,7 @@ export const dataSlice = createSlice({
             state.throwDeck.concat(state.onBoardCards)
             state.onBoardCards = []
             Array.from(Array(5).keys()).map(i => {
-                if(state.onBoardCards.length == 0){
+                if(state.trainCards.length == 0){
                     generateDeck(state)
                 }
                 state.onBoardCards.push(state.trainCards.shift())
@@ -164,6 +168,7 @@ export const dataSlice = createSlice({
         
         //putting back the unused options
         state.destinations = state.destinations.concat(action.payload.returnToDeck)
+        state.playerInfos[state.currentPlayer].rounds++
         state.currentPlayer++
         if(state.gameState == 'DESTINATION_IN_GAME'){
             state.gameState = 'IN_GAME'
@@ -201,7 +206,6 @@ export const dataSlice = createSlice({
     setHoveredData: (state, action) => {
         state.hoveredData.fromCity = action.payload.from
         state.hoveredData.toCity = action.payload.to
-        
     },
     selectFirstCity: (state, action) => {
         if(state.drawedCards > 0 || state.gameState != 'IN_GAME') return
@@ -234,6 +238,25 @@ export const dataSlice = createSlice({
                 })
             }
         }
+
+        let deleteableIndexes = []
+        for(let i = 0; i < state.buyingArrays.length; ++i){
+            const data = state.buyingArrays[i].options
+            for(let j = 0; j < data.length; ++j){
+                let equals = true
+                for(let k = j + 1; k < data.length; ++k){
+                    if(data[j].color != data[k].color || data[j].count != data[k].count) equals = false
+                }
+                if(equals) deleteableIndexes.push({
+                    'i': i,
+                    'j': j
+                })
+            }
+        }
+
+        [deleteableIndexes].reverse().map(({i, j}) => {
+            state.buyingArrays[i]?.options.splice(j, 1)
+        })
 
         //delete indexes, which are already bought from someone
         let deleteIndexes = []
@@ -301,7 +324,8 @@ export const dataSlice = createSlice({
         console.log(boughtWith)
         boughtWith.map(item => {
             Array.from(Array(item.count).keys()).map(i => {
-                state.throwDeck.push(item.color)
+                const color = item.color.capitalize()
+                state.throwDeck.push(color)
             })
         })
         /*we have to check the color on the map
@@ -330,9 +354,9 @@ export const dataSlice = createSlice({
         if(state.playerInfos[state.currentPlayer].playerTrainCount < buildedValue) return
 
         state.playerInfos[state.currentPlayer].playerTrainCount -= buildedValue
-        state.playerInfos[state.currentPlayer].playerScore += pointCounter(buildedValue)
+        state.playerInfos[state.currentPlayer].playerScore += parseInt(pointCounter(buildedValue))
 
-        if(state.playerInfos[state.currentPlayer].playerTrainCount <= 2){
+        if(state.playerInfos[state.currentPlayer].playerTrainCount <= 2 && state.remainingRounds == null){
             state.remainingRounds = 1
         }
 
@@ -402,9 +426,9 @@ export const dataSlice = createSlice({
             for(let j = 0; j < state.playerGoals[state.currentPlayer].length; ++j){
                 const currentGoal = state.playerGoals[state.currentPlayer][j]
                 if(data && data.includes(currentGoal.fromCity) && data.includes(currentGoal.toCity) 
-                    && state.playerGoals[state.currentPlayer][j].completed != false){
+                    && state.playerGoals[state.currentPlayer][j].completed == false){
                     state.playerGoals[state.currentPlayer][j].completed = true
-                    state.playerInfos[state.currentPlayer].playerScore += state.playerGoals[state.currentPlayer][j].value
+                    state.playerInfos[state.currentPlayer].playerScore += parseInt(state.playerGoals[state.currentPlayer][j].value)
                 }
             }
         }
@@ -430,9 +454,6 @@ export const dataSlice = createSlice({
 function nextPlayer(state){
     state.playerInfos[state.currentPlayer].rounds++
     state.currentPlayer++
-    if(state.currentPlayer == state.playerCount && state.remainingRounds == 1){
-        state.remainingRounds = 0
-    }
     if(state.currentPlayer == state.playerCount && state.remainingRounds == 0){
         state.gameState = 'END_GAME'
         let maximums = Array(state.playerCount)
@@ -446,7 +467,7 @@ function nextPlayer(state){
             }
         }
         for(let i = 0; i < maximums.length; ++i){
-            state.playerInfos[maximums].longestTrain = maximums[i]
+            state.playerInfos[i].longestTrain = maximums[i]
         }
         let maxValue = maximums.reduce((a, b) => b > a ? b : a)
         maximums.map((value, index) => {
@@ -454,6 +475,9 @@ function nextPlayer(state){
                 state.playerInfos[index].playerScore += 10
             }
         })
+    }
+    if(state.currentPlayer == state.playerCount && state.remainingRounds == 1){
+        state.remainingRounds = 0
     }
     state.currentPlayer %= state.playerCount
     state.hoveredData = {

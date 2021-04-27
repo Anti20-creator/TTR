@@ -40,11 +40,7 @@ function Map() {
 
     //only for testing
     useEffect(() => {
-        dispatch(setPlayerCount(2))
-        dispatch(initPlayerHands())
-        dispatch(initOnBoardCars())
-        dispatch(drawLongDestinations())
-        dispatch(drawGoalOptionsForAllPlayers())
+        
     }, [])
 
     let cities
