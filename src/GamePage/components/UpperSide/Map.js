@@ -81,7 +81,6 @@ function Map() {
                                 ticketToRideData.cities[city].city == goals?.fromCity
                                     || ticketToRideData.cities[city].city == goals?.toCity
                             } />
-                //return (<div></div>)
             })}
             {Object.keys(ticketToRideData.connections).map(connection => {
                 const color = ticketToRideData.connections[connection].color
@@ -96,7 +95,6 @@ function Map() {
                 const rotate = Math.acos((fromX*toX + fromY*toY)/(n1*n2)) * 180 / Math.PI
                 return (Object.keys(ticketToRideData.connections[connection].elements).map(element => {
                     const actual = ticketToRideData.connections[connection].elements[element]
-                    //console.log(actual.color)
                     return <TrainRoute 
                                 placeholderColor={color} 
                                 x={actual.x} 
@@ -106,8 +104,6 @@ function Map() {
                                 playerHolding={"red"} />
                 }))
                 return undefined
-                //console.log(connection)
-                //return (<div></div>)
             })}
 
             {lines.map((player, idxPlayer) => player.map((line, idxLine) => {
@@ -120,7 +116,6 @@ function Map() {
                                 }
                             }))
                             let stroke = 3
-                            console.log('MAP OUTPUT')
                             if(hovering && completedOne.filter(x => x.fromCity == line.fromCity && x.toCity == line.toCity).length > 0){
                                 console.log(line.fromCity)
                                 console.log(line.toCity)
@@ -137,8 +132,7 @@ function Map() {
                                         />)} 
                                         )
                             )}
-            
-            {console.log('LINES: ', lines)}
+        
 
 
             <Dialog 
@@ -150,10 +144,12 @@ function Map() {
                 {buyingOptions && buyingOptions.length > 0 && buyingOptions.map((options, i) => {
                     console.log(options)
                     return options.options.map((option, j) => {
+                        const backColor = options.color
+                        const textColor = backColor == 'black' ? 'white' : 'black'
                         return (
                             <div key={i} style={{display: 'flex'}}>
                                 <PlayerHand cards={option} />
-                                <Button style={{backgroundColor: options.color}} 
+                                <Button style={{backgroundColor: backColor, border: '1px solid black', color:textColor}} 
                                     onClick={() => dispatch(build({
                                         i: i,
                                         j: j,

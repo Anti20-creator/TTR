@@ -80,7 +80,7 @@ export const dataSlice = createSlice({
                 name: 'Player' + (i+1),
                 playerColor: colors[i],
                 playerScore: 0,
-                playerTrainCount: 5,
+                playerTrainCount: 45,
                 rounds: 0,
                 seed: seed
             }
@@ -176,6 +176,7 @@ export const dataSlice = createSlice({
         else if(state.currentPlayer == state.playerCount){
             state.gameState = 'IN_GAME'
             state.destinations = state.destinations.concat(state.longDestinations)
+            state.longDestinations = []
             shuffle(state.destinations, 10)
         }
         state.currentPlayer %= state.playerCount
@@ -441,6 +442,7 @@ export const dataSlice = createSlice({
         state.isHovering = action.payload
     },
     drawDestinationsInGame: (state, action) => {
+        if(state.gameState != 'IN_GAME' || state.drawedCards > 0) return
         if(state.destinations.length == 0) return
         state.gameState = 'DESTINATION_IN_GAME'
         state.playerGoalOptions[state.currentPlayer] = []

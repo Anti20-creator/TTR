@@ -14,24 +14,11 @@ function LineBetweenPoints({fromX, fromY, toX, toY, color, stroke}) {
     }else{
         alpha = (Math.asin(a/b) * 180 / Math.PI) + 7
     }
-    console.log(alpha, a, b, c, fromX, fromY)
 
     return (
         <svg style={{position: 'absolute', width: '100%', height: '100%'}}>
             <line x1={fromX + '%'} y1={fromY + '%'} x2={toX + '%'} y2={toY + '%'} style={{stroke: color,strokeWidth: stroke}} />
         </svg>
-        /*<div 
-            style={{
-                position: 'absolute', 
-                left: 'calc(' + (fromX + toX) / 2 + '% - 3px)', 
-                top: (fromY + toY) / 2 + '%',
-                width: '2px',
-                height: width + '%',
-                backgroundColor: 'red',
-                transform: 'translate(-50%, -50%) rotate(' + (alpha) + 'deg)'}} 
-            className="lineBetween">
-            
-        </div>*/
     )
 }
 

@@ -6,10 +6,11 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import ScoreBoardRow from './ScoreBoardRow'
 import './ScoreBoardPage.css'
-import { makeStyles, withStyles } from '@material-ui/core'
+import { Button, makeStyles, withStyles } from '@material-ui/core'
 import ScoreBoardMapDialog from './ScoreBoardMapDialog'
 import { allGoals, playerInfos } from '../features/dataSlice'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router'
 
 function ScoreBoardPage() {
 
@@ -73,6 +74,12 @@ function ScoreBoardPage() {
 
     const classes = useStyles()
 
+    const history = useHistory()
+
+    function back() {
+        history.push('../')
+    }
+
     return (
         <div className="scoreBoard">
             <div>
@@ -100,6 +107,7 @@ function ScoreBoardPage() {
                         })}
                     </TableBody>
                 </Table>
+                <Button onClick={back}>Vissza a kezdőlapra</Button>
             </div>
         </div>
     )

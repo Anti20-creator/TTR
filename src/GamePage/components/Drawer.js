@@ -10,7 +10,6 @@ function Drawer() {
     const data = useSelector(onBoardCards)
 
     useEffect(() => {
-            console.log(data)
             setCards(data)            
     }, [data])
 
@@ -19,9 +18,6 @@ function Drawer() {
             {data.map((color, i) => {
                 return <Card cardColor={color} idx={i} key={i} />
             })}
-            {/*data.map(color => {
-                return <p>{color}</p>
-            })*/}
         </div>
     )
 }

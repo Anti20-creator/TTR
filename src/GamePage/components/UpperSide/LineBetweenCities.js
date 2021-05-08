@@ -27,10 +27,10 @@ function LineBetweenCities({fromCity, toCity, color, before, trainColor, stroke}
         })
         needToReverse = true
     }
-    //console.log(between)
-    //console.log('BEFOREVALUE:', before)
+
+
     between = parseInt(between) + parseInt(before)
-    //console.log(ticketToRideData.connections[between])
+
     ticketToRideData.connections[between].elements.map(element => {
         coordinates.push(element)
     })
@@ -39,9 +39,6 @@ function LineBetweenCities({fromCity, toCity, color, before, trainColor, stroke}
         return ticketToRideData.cities[x].city == toCity
     })
     coordinates.push({'x': ticketToRideData.cities[end].x, 'y': ticketToRideData.cities[end].y})
-
-    //console.log('Coordinates:')
-    //console.log(coordinates)
 
     if(needToReverse){
         [coordinates[0], coordinates[coordinates.length-1]] = [coordinates[coordinates.length-1], coordinates[0]]
