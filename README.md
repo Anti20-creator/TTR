@@ -1,4 +1,16 @@
-﻿# Feladat megvalósítása
+﻿# Ticket To Ride II. felvonás
+
+# States
+
+A csatolt state.json fájlok között van olyan, melyen már csak pár lépésre vagyunk a játék végétől. Van köztük olyan is, ahol már elfogytak a célkártyák, így nem tudunk újat hozni közülük. A különféle városkiválasztásokat színekkel és pulzálással igyekeztem jelölni.
+
+# Építés megvalósítása
+
+Rákattintunk egy városra, majd kijelölődnek a szomszédos városok, ahova tudunk építeni. A városra való kattintás után pedig előjön egy pop up box, ahonnan ki lehet választani, hogy milyen kártyakombinációval kívánjuk megvásárolni.
+
+#################################################################
+
+# Feladat megvalósítása
 
 ## Kezdőoldal
 
