@@ -8,9 +8,21 @@ A csatolt state.json fájlok között van olyan, melyen már csak pár lépésre
 
 Rákattintunk egy városra, majd kijelölődnek a szomszédos városok, ahova tudunk építeni. A városra való kattintás után pedig előjön egy pop up box, ahonnan ki lehet választani, hogy milyen kártyakombinációval kívánjuk megvásárolni.
 
-#################################################################
+# Nyilatkozat
 
-# Feladat megvalósítása
+Amtmann Kristóf\
+VZTSXJ\
+Kliensoldali webprogramozás - Ticket To Ride 2. felvonás\
+2021.05.09.\
+Ezt a megoldást Amtmann Kristóf, VZTSXJ küldte be és készítette a Kliensoldali webprogramozás kurzus Ticket To Ride 2. felvonás feladatához.\
+Kijelentem, hogy ez a megoldás a saját munkám.
+Nem másoltam vagy használtam harmadik féltől származó megoldásokat.
+Nem továbbítottam megoldást hallgatótársaimnak, és nem is tettem közzé.
+Az Eötvös Loránd Tudományegyetem Hallgatói Követelményrendszere (ELTE szervezeti és működési szabályzata, II. Kötet, 74/C. §) kimondja,
+hogy mindaddig, amíg egy hallgató egy másik hallgató munkáját - vagy legalábbis annak jelentős részét - saját munkájaként mutatja be,
+az fegyelmi vétségnek számít. A fegyelmi vétség legsúlyosabb következménye a hallgató elbocsátása az egyetemről.
+
+# Feladat megvalósítása (I. felvonás)
 
 ## Kezdőoldal
 
