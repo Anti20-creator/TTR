@@ -217,24 +217,25 @@ export const dataSlice = createSlice({
         let newItems = []
         for(let i = 1; i <= Object.keys(ticketToRideData.connections).length; ++i){
             const item = ticketToRideData.connections[i]
+            const minJokers = ticketToRideData.connections[i]?.locomotive ? ticketToRideData.connections[i].locomotive : 0
             
             if(item?.fromCity == state.selectedFirstCity
-                && canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length)){
+                && canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length, minJokers)){
                 newItems.push(item.toCity)
                 console.log(item.toCity)
                 state.buyingArrays.push({
                     city: item.toCity,
-                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length),
+                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length, minJokers),
                     color: item.color
                 })
             }
             if(item?.toCity == state.selectedFirstCity
-                && canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length)){
+                && canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length, minJokers)){
                 newItems.push(item.fromCity)
                 console.log(item.fromCity)
                 state.buyingArrays.push({
                     city: item.fromCity,
-                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length),
+                    options: canPayForIt(state.playerHands[state.currentPlayer], item.color, item.elements.length, minJokers),
                     color: item.color
                 })
             }
@@ -507,7 +508,7 @@ function mod(n, m) {
     return ((n % m) + m) % m
 }
 
-function canPayForIt(cardsInHand, color, length){
+function canPayForIt(cardsInHand, color, length, minJokers){
     
     let result = []
 
@@ -519,7 +520,7 @@ function canPayForIt(cardsInHand, color, length){
         if((matchingCards + jokerCards) >= length){
                 console.log('IGAZ')
                 for(let i = 0; i <= length; ++i){
-                    if(matchingCards >= length - i && jokerCards >= i){
+                    if(matchingCards >= length - i && jokerCards >= i && jokerCards >= minJokers){
                         let array = []
                         array.push({
                             'color': color,
@@ -547,7 +548,7 @@ function canPayForIt(cardsInHand, color, length){
             if((matchingCards + jokerCards) >= length){
                     console.log('IGAZ')
                     for(let i = 0; i <= length; ++i){
-                        if(matchingCards >= length - i && jokerCards >= i){
+                        if(matchingCards >= length - i && jokerCards >= i && jokerCards >= minJokers){
                             let array = []
                             array.push({
                                 'color': ccolor,

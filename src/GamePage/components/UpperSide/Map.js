@@ -19,12 +19,15 @@ import {
     build,
     playerLines,
     showCompletedLine,
-    isHovering
+    isHovering,
+    currentIdx
  } from '../../../features/dataSlice'
 import { Button, Dialog, DialogTitle } from '@material-ui/core'
 import PlayerHand from '../DownSide/PlayerHand'
 
 function Map() {
+
+    const colors = ['Purple', 'Green', 'Blue', 'Yellow', 'Red', 'Joker', 'Orange', 'White', 'Black'] 
 
     const dispatch = useDispatch()
     const index = useSelector(actualGoalIndex)
@@ -35,6 +38,7 @@ function Map() {
     const lines = useSelector(playerLines)
     const completedOne = useSelector(showCompletedLine)
     const hovering = useSelector(isHovering)
+    const playerIndex = useSelector(currentIdx)
     const url = process.env.PUBLIC_URL + 'ticket-to-ride-euorpe-map.jpg'
     console.log(url)
 
@@ -116,7 +120,9 @@ function Map() {
                                 }
                             }))
                             let stroke = 3
-                            if(hovering && completedOne.filter(x => x.fromCity == line.fromCity && x.toCity == line.toCity).length > 0){
+                            if(hovering && 
+                                completedOne.filter(x => x.fromCity == line.fromCity && x.toCity == line.toCity).length > 0 &&
+                                line.color == colors[playerIndex]){
                                 console.log(line.fromCity)
                                 console.log(line.toCity)
                                 stroke = 6 

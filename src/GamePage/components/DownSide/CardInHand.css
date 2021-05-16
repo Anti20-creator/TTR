@@ -3,7 +3,6 @@
 }
 .cardInHand {
     transition: 0.8s all;
-    border: 2px solid white;
 }
 /*
 .cardInHand:hover {
@@ -20,4 +19,10 @@
     -webkit-text-stroke: 3px black; /* width and color */
     transform: translateX(-50%);
     color: white;
+}
+
+@media(max-width: 1367px) {
+    .cardInHand .cardCount {
+        font-size: 3rem;
+    }
 }
