@@ -2,7 +2,7 @@
 
 # States
 
-A csatolt state.json fájlok között van olyan, melyen már csak pár lépésre vagyunk a játék végétől. Van köztük olyan is, ahol már elfogytak a célkártyák, így nem tudunk újat hozni közülük. A különféle városkiválasztásokat színekkel és pulzálással igyekeztem jelölni.
+A csatolt JSON fájlok között van olyan, melyen már csak pár lépésre vagyunk a játék végétől. Van köztük olyan is, ahol már elfogytak a célkártyák, így nem tudunk újat hozni közülük. Egy olyat is csatoltam, ahol egy cél teljesítve van. A különféle városkiválasztásokat színekkel és pulzálással igyekeztem jelölni.
 
 # Építés megvalósítása
 
