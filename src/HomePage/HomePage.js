@@ -8,6 +8,9 @@ import Fab from '@material-ui/core/Fab'
 import NavigationIcon from '@material-ui/icons/Navigation'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
+import {getRoomId, wsCreateRoom, wsJoinRoom} from '../socket/ClientSocket'
+import { useDispatch } from 'react-redux'
+import { initNames } from '../features/dataSlice'
 
 function HomePage() {
 
@@ -16,6 +19,7 @@ function HomePage() {
     const [playerCount, setPlayerCount] = useState(0)
     const [roomID, setRoomID] = useState("")
 
+    const dispatch = useDispatch()
     const history = useHistory()
 
     const createRoom = (e) => {
@@ -23,7 +27,9 @@ function HomePage() {
         if(playerName.trim() != "" && playerCount > 1 && playerCount < 6){
             localStorage.setItem('hostPlayerName', playerName)
             localStorage.setItem('roomCount', playerCount)
-            history.push('/room/123')
+            dispatch(initNames(playerCount))
+            wsCreateRoom(playerCount, playerName)
+            history.push('/room/')
         }else{
             setOpen(true)
         }
@@ -34,7 +40,8 @@ function HomePage() {
         if(joinPlayerName.trim() != "" && roomID.trim() != ""){
             localStorage.setItem('hostPlayerName', playerName)
             localStorage.setItem('roomID', roomID)
-            history.push('/room/123')
+            wsJoinRoom(roomID, playerName)
+            history.push('/room/')
         }else{
             setOpen(true)
         }

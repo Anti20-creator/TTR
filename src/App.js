@@ -4,8 +4,15 @@ import HomePage from './HomePage/HomePage';
 import WaitingRoom from './WaitingRoom/WaitingRoom';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ScoreBoardPage from './ScoreBoardPage/ScoreBoardPage';
+import 'socket.io-client'
+import { getOrCreateSocket, registerListenersOnSocket } from './socket/ClientSocket';
+import store from './app/store'
 
 function App() {
+
+  getOrCreateSocket()
+  registerListenersOnSocket(store)
+  
   return (
     <div className="app">
       <Router>
@@ -13,7 +20,7 @@ function App() {
           <Route exact path='/'>
             <HomePage />
           </Route>
-          <Route path='/room/:id'>
+          <Route path='/room/'>
             <WaitingRoom />
           </Route>
           <Route path='/game/:id'>

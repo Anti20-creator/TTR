@@ -37,9 +37,26 @@ export const dataSlice = createSlice({
     bigLineData: [],
     remainingRounds: null,
     showCompleted: [],
-    throwDeck: []
+    throwDeck: [],
+    playersJoined: 0
   },
   reducers: {
+      initNames: (state, action) => {
+        state.playerCount = action.payload
+        Array.from(Array(state.playerCount).keys()).map(i => {
+            state.bigLineData.push([])
+            state.playerInfos.push([])
+            const seed = Math.floor(Math.random() * 10000)
+            state.playerInfos[i] = {
+                name: '',
+                playerColor: colors[i],
+                playerScore: 0,
+                playerTrainCount: 45,
+                rounds: 0,
+                seed: seed
+            }
+        })
+    },
     setPlayerCount: (state, action) => {
         state.playerCount = action.payload
     },
@@ -71,20 +88,6 @@ export const dataSlice = createSlice({
         //shuffling destination cards
         shuffle(state.destinations, 10)
         shuffle(state.longDestinations, 10)
-
-        Array.from(Array(state.playerCount).keys()).map(i => {
-            state.bigLineData.push([])
-            state.playerInfos.push([])
-            const seed = Math.floor(Math.random() * 10000)
-            state.playerInfos[i] = {
-                name: 'Player' + (i+1),
-                playerColor: colors[i],
-                playerScore: 0,
-                playerTrainCount: 45,
-                rounds: 0,
-                seed: seed
-            }
-        })
     },
     initOnBoardCars: (state) => {
         state.onBoardCards = []
@@ -450,6 +453,24 @@ export const dataSlice = createSlice({
         Array.from(Array(state.destinations.length < 3 ? state.destinations.length : 3).keys()).map(i => {
             state.playerGoalOptions[state.currentPlayer].push(state.destinations.shift())
         })
+    },
+    setPlayerName: (state, action) => {
+        for(let i = 0; i < state.playerInfos.length; ++i){
+            if(state.playerInfos[i].name == '' || state.playerInfos[i].name == undefined){
+                state.playerInfos[i].name = action.payload.name
+                state.playersJoined++
+                break
+            }
+        }
+        state.playersJoined++
+    },
+    playerLeaved: (state, action) => {
+        for(let i = 0; i < state.playerInfos.length; ++i){
+            if(state.playerInfos[i].name == action.payload.name){
+                state.playerInfos[i].name = ''
+                state.playersJoined--
+            }
+        }
     }
 }
 });
@@ -630,7 +651,10 @@ export const {
     selectSecondCity,
     build,
     hoveringGoal,
-    drawDestinationsInGame
+    drawDestinationsInGame,
+    setPlayerName,
+    playerLeaved,
+    initNames
  } = dataSlice.actions
 
 export const onBoardCards = state => state.data.onBoardCards
