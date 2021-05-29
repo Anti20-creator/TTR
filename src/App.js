@@ -2,16 +2,15 @@ import './App.css';
 import GamePage from './GamePage/GamePage';
 import HomePage from './HomePage/HomePage';
 import WaitingRoom from './WaitingRoom/WaitingRoom';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, useHistory } from "react-router-dom";
 import ScoreBoardPage from './ScoreBoardPage/ScoreBoardPage';
-import 'socket.io-client'
-import { getOrCreateSocket, registerListenersOnSocket } from './socket/ClientSocket';
+import { registerListenersOnSocket } from './socket/ClientSocket';
 import store from './app/store'
 
 function App() {
 
-  getOrCreateSocket()
-  registerListenersOnSocket(store)
+  const history = useHistory()
+  registerListenersOnSocket(store, history)
   
   return (
     <div className="app">

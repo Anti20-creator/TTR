@@ -11,6 +11,14 @@ import MuiAlert from '@material-ui/lab/Alert'
 import {getRoomId, wsCreateRoom, wsJoinRoom} from '../socket/ClientSocket'
 import { useDispatch } from 'react-redux'
 import { initNames } from '../features/dataSlice'
+import { initPlayerHands, 
+    setPlayerCount, 
+    initOnBoardCars, 
+    drawLongDestinations,
+    drawGoalOptionsForAllPlayers,
+    playerInfos,
+    isRoomFull
+ } from '../features/dataSlice'
 
 function HomePage() {
 
@@ -28,7 +36,11 @@ function HomePage() {
             localStorage.setItem('hostPlayerName', playerName)
             localStorage.setItem('roomCount', playerCount)
             dispatch(initNames(playerCount))
-            wsCreateRoom(playerCount, playerName)
+            dispatch(initPlayerHands())
+            dispatch(initOnBoardCars())
+            dispatch(drawLongDestinations())
+            dispatch(drawGoalOptionsForAllPlayers())
+            const answer = wsCreateRoom(playerCount, playerName)
             history.push('/room/')
         }else{
             setOpen(true)
@@ -40,7 +52,7 @@ function HomePage() {
         if(joinPlayerName.trim() != "" && roomID.trim() != ""){
             localStorage.setItem('hostPlayerName', playerName)
             localStorage.setItem('roomID', roomID)
-            wsJoinRoom(roomID, playerName)
+            wsJoinRoom(roomID, joinPlayerName)
             history.push('/room/')
         }else{
             setOpen(true)

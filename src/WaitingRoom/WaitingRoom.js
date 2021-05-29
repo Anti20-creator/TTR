@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './WaitingRoom.css'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { Avatar, IconButton } from '@material-ui/core'
@@ -13,8 +13,16 @@ import { initPlayerHands,
     initOnBoardCars, 
     drawLongDestinations,
     drawGoalOptionsForAllPlayers,
-    playerInfos
+    playerInfos,
+    isRoomFull,
+    playersJoined
  } from '../features/dataSlice'
+import { getRoomId, leaveRoom, logStore, getRoomFull } from '../socket/ClientSocket'
+
+function useForceUpdate(){
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => value + 1); // update the state to force render
+}
 
 function WaitingRoom() {
 
@@ -22,32 +30,47 @@ function WaitingRoom() {
     const history = useHistory()
     const dispatch = useDispatch()
     const infos = useSelector(playerInfos)
+    const joined = useSelector(playersJoined)
+    const forceUpdate = useForceUpdate()
+    const isFull = useSelector(isRoomFull)
+    const full = getRoomFull()
+    const [roomId, setRoomId] = useState()
 
     useEffect(() => {
+        console.log('infos update')
+        forceUpdate()
+        setRoomId(getRoomId())
         console.log(infos)
-    }, [infos])
+        if(isFull == true){
+            history.push('../../game/123')
+        }
+    }, [infos, isFull])
 
     const startGame = () => {
-        dispatch(setPlayerCount(2))
-        dispatch(initPlayerHands())
-        dispatch(initOnBoardCars())
-        dispatch(drawLongDestinations())
-        dispatch(drawGoalOptionsForAllPlayers())
         history.push('../../game/123')
+    }
+
+    const make = () => {
+        logStore()
+        console.log(infos)
+        forceUpdate()
     }
     
     return (
         <div className="waitingRoom">
             <div className="exit">
                 <Tooltip title="Kilépés">
-                    <IconButton aria-label="leave-room" onClick={() => history.push('../..')}>
+                    <IconButton aria-label="leave-room" onClick={() => {
+                        leaveRoom(getRoomId())
+                        history.push('../..')
+                    }}>
                         <ExitToAppIcon />
                     </IconButton>
                 </Tooltip>
             </div>
 
             <div className="elements">
-                <h1>#Szobaazonosító</h1>
+                <h1>{ roomId }</h1>
 
                 <div className="players">
                     {Array.from(Array(infos.length).keys()).map(item => {
@@ -66,6 +89,11 @@ function WaitingRoom() {
                 <Button variant="outlined" color="primary" onClick={() => startGame()} >
                         Játék indítása
                 </Button>
+
+                <Button onClick={() => make()}>Log Store</Button>
+
+                {infos[0]?.name}
+
 
             </div>
         </div>

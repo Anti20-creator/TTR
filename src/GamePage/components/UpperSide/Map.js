@@ -24,6 +24,7 @@ import {
  } from '../../../features/dataSlice'
 import { Button, Dialog, DialogTitle } from '@material-ui/core'
 import PlayerHand from '../DownSide/PlayerHand'
+import {synchronizeStep, getPlayerId} from '../../../socket/ClientSocket'
 
 function Map() {
 
@@ -69,6 +70,9 @@ function Map() {
 
     function closeBuyingPanel() {
         dispatch(build())
+        if(playerIndex == getPlayerId()){
+            synchronizeStep()
+        }
     }
 
     return (
@@ -156,11 +160,17 @@ function Map() {
                             <div key={i} style={{display: 'flex'}}>
                                 <PlayerHand cards={option} />
                                 <Button style={{backgroundColor: backColor, border: '1px solid black', color:textColor}} 
-                                    onClick={() => dispatch(build({
-                                        i: i,
-                                        j: j,
-                                        color: options.color
-                                    }))}>ÉPÍT</Button>
+                                    onClick={() => 
+                                        {
+                                            if(playerIndex == getPlayerId()){
+                                                dispatch(build({
+                                                    i: i,
+                                                    j: j,
+                                                    color: options.color}
+                                                    ))
+                                                synchronizeStep()
+                                            }
+                                        }}>ÉPÍT</Button>
                             </div>
                         )
                     })

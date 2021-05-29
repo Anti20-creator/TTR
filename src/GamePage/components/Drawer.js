@@ -10,7 +10,7 @@ function Drawer() {
     const data = useSelector(onBoardCards)
 
     useEffect(() => {
-            setCards(data)            
+        setCards(data)            
     }, [data])
 
     return (

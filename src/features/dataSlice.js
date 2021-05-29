@@ -1,7 +1,8 @@
-import { StarRateTwoTone } from '@material-ui/icons';
+﻿import { StarRateTwoTone } from '@material-ui/icons';
 import { createSlice } from '@reduxjs/toolkit'
 import TrainDeck from '../Decks/TrainDeck';
 import { ticketToRideData } from '../mapdata/MapData';
+import {getPlayerId} from '../socket/ClientSocket'
 
 const colors = ['Purple', 'Green', 'Blue', 'Yellow', 'Red', 'Joker', 'Orange', 'White', 'Black'] 
 const trainDeck = new TrainDeck(12, 14, colors)
@@ -38,10 +39,12 @@ export const dataSlice = createSlice({
     remainingRounds: null,
     showCompleted: [],
     throwDeck: [],
-    playersJoined: 0
+    playersJoined: 0,
+    isRoomFull: false,
+    history: []
   },
   reducers: {
-      initNames: (state, action) => {
+    initNames: (state, action) => {
         state.playerCount = action.payload
         Array.from(Array(state.playerCount).keys()).map(i => {
             state.bigLineData.push([])
@@ -51,7 +54,7 @@ export const dataSlice = createSlice({
                 name: '',
                 playerColor: colors[i],
                 playerScore: 0,
-                playerTrainCount: 45,
+                playerTrainCount: 3,
                 rounds: 0,
                 seed: seed
             }
@@ -63,7 +66,7 @@ export const dataSlice = createSlice({
     initPlayerHands: (state) => {
         //clearing all players hand
         state.playerHands = []
-        state.bigLineData = []
+        //state.bigLineData = []
         state.currentPlayer = 0
 
         Array.from(Array(state.playerCount).keys()).map(i => {
@@ -96,6 +99,8 @@ export const dataSlice = createSlice({
         })
     },
     drawCardToBoard: (state, action) => {
+        if(state.currentPlayer != getPlayerId()) return
+
         if(state.gameState != 'IN_GAME' 
         || (action.payload.color == 'Joker' && state.drawedCards > 0)) return
         if(action.payload.color == 'Cover'){
@@ -112,22 +117,19 @@ export const dataSlice = createSlice({
                 generateDeck(state)
             }
             if(action.payload.color == 'Joker'){
-                /*
-                state.currentPlayer += 1
-                state.currentPlayer %= state.playerCount
-                state.drawedCards = 0
-                */
+               state.history.push('' + state.playerInfos[state.currentPlayer].name + ' Jokert húzott!')
                nextPlayer(state)
             }else{
                 state.drawedCards++
             }
         }
-
+        
         if(state.trainCards.length == 0){
             generateDeck(state)
         }
         
         if(state.drawedCards == 2){
+            state.history.push('' + state.playerInfos[state.currentPlayer].name + ' két kártyát húzott!')
             nextPlayer(state)
         }
 
@@ -164,6 +166,10 @@ export const dataSlice = createSlice({
         })
     },
     acceptDestinations: (state, action) => {
+        if(state.currentPlayer != getPlayerId()) {
+            alert('Nem te vagy soron!')
+        }
+
         console.log(state.playerGoals[state.currentPlayer])
         
         //adding the selected cards to the active players goals
@@ -182,7 +188,9 @@ export const dataSlice = createSlice({
             state.longDestinations = []
             shuffle(state.destinations, 10)
         }
+        //nextPlayer(state)
         state.currentPlayer %= state.playerCount
+        state.history.push('' + state.playerInfos[state.currentPlayer]?.name + ' célkártyákat húzott!')
     },
     stepSelectedGoalIndex: (state, action) => {
         state.selectedGoalIndex += action.payload
@@ -212,6 +220,8 @@ export const dataSlice = createSlice({
         state.hoveredData.toCity = action.payload.to
     },
     selectFirstCity: (state, action) => {
+        if(state.currentPlayer != getPlayerId()) return
+
         if(state.drawedCards > 0 || state.gameState != 'IN_GAME') return
         state.selectedFirstCity = state.selectedFirstCity == action.payload ? '' : action.payload
         state.neighbourCities = []
@@ -318,11 +328,15 @@ export const dataSlice = createSlice({
         state.neighbourCities = state.neighbourCities.concat([...new Set(newItems)])
     },
     selectSecondCity: (state, action) => {
+        if(state.currentPlayer != getPlayerId()) return
+
         if(state.selectedFirstCity == '') return
         state.buyingOpts = state.buyingArrays.filter(arr => arr.city == action.payload)
         state.openBuyingOptions = true
     },
     build: (state, action) => {
+        if(state.currentPlayer != getPlayerId()) return
+
         state.openBuyingOptions = false
         if(action.payload == undefined) return
         const boughtWith = state.buyingOpts[action.payload.i].options[action.payload.j] //state.buyingOpts.options[action.payload]
@@ -384,7 +398,8 @@ export const dataSlice = createSlice({
 
         //algorithm to concat cities
         let breaked = false
-        for(let i = 0; i < state.bigLineData[state.currentPlayer].length; ++i){
+        const upperBound = state.bigLineData.length > 0 ? state.bigLineData[state.currentPlayer].length : 0
+        for(let i = 0; i < upperBound; ++i){
             const set = state.bigLineData[state.currentPlayer][i]
             if(set.data.includes(appendable.fromCity)){
                 set.data.push(appendable.toCity)
@@ -440,12 +455,15 @@ export const dataSlice = createSlice({
 
         state.buyingOpts = []
         state.selectedFirstCity = ''
+        state.history.push('' + state.playerInfos[state.currentPlayer].name + ' útvonalat épített!')
         nextPlayer(state)
     },
     hoveringGoal: (state, action) => {
         state.isHovering = action.payload
     },
     drawDestinationsInGame: (state, action) => {
+        if(state.currentPlayer != getPlayerId()) return
+
         if(state.gameState != 'IN_GAME' || state.drawedCards > 0) return
         if(state.destinations.length == 0) return
         state.gameState = 'DESTINATION_IN_GAME'
@@ -459,10 +477,10 @@ export const dataSlice = createSlice({
             if(state.playerInfos[i].name == '' || state.playerInfos[i].name == undefined){
                 state.playerInfos[i].name = action.payload.name
                 state.playersJoined++
+                console.log('SETTING NAME')
                 break
             }
         }
-        state.playersJoined++
     },
     playerLeaved: (state, action) => {
         for(let i = 0; i < state.playerInfos.length; ++i){
@@ -471,6 +489,31 @@ export const dataSlice = createSlice({
                 state.playersJoined--
             }
         }
+    },
+    roomIsFull: (state) => {
+        console.log('SLICE ROOM SET TO FULL')
+        if(!state.isRoomFull)
+            state.isRoomFull = true
+    },
+    synchronize: (state, action) => {
+        state.trainCards        = action.payload.trainCards
+        state.drawedCards       = action.payload.drawedCards
+        state.playerGoalOptions = action.payload.playerGoalOptions
+        state.bigLineData       = action.payload.bigLineData
+        state.currentPlayer     = action.payload.currentPlayer
+        state.destinations      = action.payload.destinations
+        state.longDestinations  = action.payload.longDestinations
+        state.isRoomFull        = action.payload.isRoomFull
+        state.onBoardCards      = action.payload.onBoardCards
+        state.throwDeck         = action.payload.throwDeck
+        state.playerInfos       = action.payload.playerInfos
+        state.playerGoals       = action.payload.playerGoals
+        state.drawedCards       = action.payload.drawedCards
+        state.playerHands       = action.payload.playerHands
+        state.playerCount       = action.payload.playerCount
+        state.gameState         = action.payload.gameState
+        state.playerLines       = action.payload.playerLines
+        state.history           = action.payload.history
     }
 }
 });
@@ -654,28 +697,37 @@ export const {
     drawDestinationsInGame,
     setPlayerName,
     playerLeaved,
-    initNames
+    initNames,
+    roomIsFull,
+    synchronize
  } = dataSlice.actions
 
-export const onBoardCards = state => state.data.onBoardCards
-export const trainDeckLength = state => state.data.trainCards.length
-export const goalDeckLength = state => state.data.destinations.length + state.data.longDestinations.length
-export const currentGoalCards = state => state.data.playerGoalOptions[state.data.currentPlayer]
-export const gameState = state => state.data.gameState
-export const actualPlayerHand = state => state.data.playerHands[state.data.currentPlayer]
-export const actualPlayerGoals = state => state.data.playerGoals[state.data.currentPlayer]
-export const actualGoalIndex = state => state.data.selectedGoalIndex
-export const hoveredData = state => state.data.hoveredData
-export const selectedFirstCity = state => state.data.selectedFirstCity
-export const neighbourCitiesData = state => state.data.neighbourCities
-export const buyingOpts = state => state.data.buyingOpts
-export const openBuying = state => state.data.openBuyingOptions
-export const playerLines = state => state.data.playerLines
-export const isHovering = state => state.data.isHovering
-export const playerInfos = state => state.data.playerInfos
-export const allPlayerHand = state => state.data.playerHands
-export const allGoals = state => state.data.playerGoals
-export const currentIdx = state => state.data.currentPlayer
-export const showCompletedLine = state => state.data.showCompleted
+export const onBoardCards           = state => state.data.onBoardCards
+export const trainDeckLength        = state => state.data.trainCards.length
+export const goalDeckLength         = state => state.data.destinations.length + state.data.longDestinations.length
+export const currentGoalCards       = state => state.data.playerGoalOptions[state.data.currentPlayer]
+export const gameState              = state => state.data.gameState
+export const actualPlayerHand       = state => state.data.playerHands[state.data.currentPlayer]
+export const actualPlayerGoals      = state => state.data.playerGoals[state.data.currentPlayer]
+export const actualGoalIndex        = state => state.data.selectedGoalIndex
+export const hoveredData            = state => state.data.hoveredData
+export const selectedFirstCity      = state => state.data.selectedFirstCity
+export const neighbourCitiesData    = state => state.data.neighbourCities
+export const buyingOpts             = state => state.data.buyingOpts
+export const openBuying             = state => state.data.openBuyingOptions
+export const playerLines            = state => state.data.playerLines
+export const isHovering             = state => state.data.isHovering
+export const playerInfos            = state => state.data.playerInfos
+export const allPlayerHand          = state => state.data.playerHands
+export const allGoals               = state => state.data.playerGoals
+export const currentIdx             = state => state.data.currentPlayer
+export const showCompletedLine      = state => state.data.showCompleted
+export const isRoomFull             = state => state.data.isRoomFull
+export const playersJoined          = state => state.data.playersJoined
+export const history                = state => state.data.history
+
+export const ownPlayerHand = state => state.data.playerHands[getPlayerId()]
+export const ownPlayerGoalOptions = state => state.data.playerGoalOptions[getPlayerId()]
+export const ownPlayerGoals = state => state.data.playerGoals[getPlayerId()]
 
 export default dataSlice.reducer

@@ -90,13 +90,15 @@ function GoalCard({data}) {
                     </CardContent>
                     <div className={classes.controls}>
                     <IconButton aria-label="previous" onClick={() => stepCities(-1)}>
-                        {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
+                        <SkipPreviousIcon />
+                        {/*theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />*/}
                     </IconButton>
                     <IconButton>
                         <DoneAllIcon style={{color : data[actual]?.completed ? 'green' : 'black'}} />
                     </IconButton>
                     <IconButton aria-label="next" onClick={() => stepCities(1)}>
-                        {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
+                        <SkipNextIcon />
+                        {/*theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />*/}
                     </IconButton>
                     </div>
                 </div>

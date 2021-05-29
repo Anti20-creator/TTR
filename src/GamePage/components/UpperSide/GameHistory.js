@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import { DialogTitle } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { history } from '../../../features/dataSlice';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -31,26 +33,22 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function GameHistory({ onClose, selectedValue, open }) {
     
     const classes = useStyles();
+    const historyFields = useSelector(history)
 
     const handleClose = () => {
-        onClose(selectedValue);
-    };
-
-    const handleListItemClick = (value) => {
-        onClose(value);
-    };
+        onClose(selectedValue)
+    }
 
     return (
         <div>
             <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
                 <DialogTitle id="simple-dialog-title">Előzmények</DialogTitle>
                 <List>
-                    <ListItem>
-                        <ListItemText primary="1. játékos kártyát húzott: piros, titkos" />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="2. játékos utat épített: Pamplona-Madrid" />
-                    </ListItem>
+                    {historyFields.slice(-2).map((item, idx) => {
+                        return <ListItem key={idx}>
+                                    <ListItemText primary={item} />
+                                </ListItem>
+                    })}
                 </List>
             </Dialog>
         </div>

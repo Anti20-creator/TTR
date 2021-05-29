@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) =>
 function DestinationCard({from, to, points, clickAction, defaultSelection}) {
 
     const classes = useStyles();
-    const theme = useTheme();
+    //const theme = useTheme();
     const dispatch = useDispatch()
 
     const [selected, setSelected] = useState(false)
