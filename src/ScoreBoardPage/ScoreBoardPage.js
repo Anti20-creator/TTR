@@ -107,7 +107,8 @@ function ScoreBoardPage() {
                         })}
                     </TableBody>
                 </Table>
-                <Button onClick={back}>Vissza a kezdőlapra</Button>
+
+                <Button className="back" onClick={back}>Vissza a kezdőlapra</Button>
             </div>
         </div>
     )

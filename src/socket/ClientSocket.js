@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { roomIsFull, setPlayerName, synchronize } from '../features/dataSlice'
+import { playerLeaved, roomIsFull, setPlayerName, synchronize } from '../features/dataSlice'
 import io from 'socket.io-client'
 import { SettingsSystemDaydreamTwoTone } from '@material-ui/icons'
 
@@ -11,6 +11,7 @@ let playerId = null
 let history = null
 let roomFull = false
 let creator = false
+let globalName = null
 
 export function getRoomFull(){
     return roomFull
@@ -110,6 +111,9 @@ export function wsCreateRoom(roomSize, name) {
             store.dispatch(setPlayerName({
                 name: name
             }))
+
+            globalName = name
+            
             
             socket.emit('sync-state', getRoomId(), store.getState().data, true, data => {
                 console.log(data)
@@ -135,6 +139,7 @@ export function wsJoinRoom(roomId, playerName) {
             room = roomId
             console.log('Joined')
             
+            globalName = playerName
             
         }else{
             console.log('ERROR')
@@ -160,9 +165,22 @@ export function wsJoinRoom(roomId, playerName) {
 export function leaveRoom(roomId) {
     if(!socket) return
 
-    socket.emit('close-room', roomId, data => {
-        console.log(data)
-    })
+    
+    if(creator){
+        socket.emit('close-room', roomId, data => {
+            console.log(data)
+        })
+    }else{
+        store.dispatch(playerLeaved({
+            name: globalName
+        }))
+        socket.emit('sync-state', getRoomId(), store.getState().data, true, data => {
+            socket.emit('leave-room', roomId, data => {
+                console.log(data)
+            })
+        })
+    }
+
 }
 
 export function logStore(){

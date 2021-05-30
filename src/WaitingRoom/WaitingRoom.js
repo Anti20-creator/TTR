@@ -86,13 +86,11 @@ function WaitingRoom() {
                     })}
                 </div>
                 
-                <Button variant="outlined" color="primary" onClick={() => startGame()} >
+                {/*<Button variant="outlined" color="primary" onClick={() => startGame()} >
                         Játék indítása
                 </Button>
 
-                <Button onClick={() => make()}>Log Store</Button>
-
-                {infos[0]?.name}
+                <Button onClick={() => make()}>Log Store</Button>*/}
 
 
             </div>

@@ -45,6 +45,7 @@ export const dataSlice = createSlice({
   },
   reducers: {
     initNames: (state, action) => {
+        state.playerInfos = []
         state.playerCount = action.payload
         Array.from(Array(state.playerCount).keys()).map(i => {
             state.bigLineData.push([])
@@ -54,7 +55,7 @@ export const dataSlice = createSlice({
                 name: '',
                 playerColor: colors[i],
                 playerScore: 0,
-                playerTrainCount: 3,
+                playerTrainCount: 45,
                 rounds: 0,
                 seed: seed
             }

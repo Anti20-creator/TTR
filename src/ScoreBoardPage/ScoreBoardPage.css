@@ -42,3 +42,12 @@
     border-style: hidden;
     overflow: hidden;
 }
+
+.scoreBoard .MuiButtonBase-root {
+    margin: 0 auto;
+    display: block;
+}
+
+.scoreBoard .back {
+    margin-top: 20px;
+}

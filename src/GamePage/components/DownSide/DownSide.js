@@ -35,12 +35,7 @@ function DownSide() {
                 if(cIdx == getPlayerId()){
                     setBegin(true)
                 }
-                //synchronizeStep()
             }}/>}
-            <Button onClick={() => {
-                forceUpdate()
-                synchronizeStep()
-            }}>UPDATE</Button>
         </div>
     )
 }
